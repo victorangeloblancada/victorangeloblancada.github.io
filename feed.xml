@@ -1,4 +1,220 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://victorangeloblancada.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://victorangeloblancada.github.io/" rel="alternate" type="text/html" /><updated>2022-03-09T00:59:10+08:00</updated><id>https://victorangeloblancada.github.io/feed.xml</id><title type="html">Victor Angelo Blancada</title><subtitle>Victor Angelo Blancada is a data scientist, AI developer, and strategy consultant with proven experience in improving operational efficiency through predictive modeling and AI-powered automation.</subtitle><entry><title type="html">NaNoGenMo 2021</title><link href="https://victorangeloblancada.github.io/blog/2021/10/09/nanogenmo-2021.html" rel="alternate" type="text/html" title="NaNoGenMo 2021" /><published>2021-10-09T00:00:00+08:00</published><updated>2021-10-09T00:00:00+08:00</updated><id>https://victorangeloblancada.github.io/blog/2021/10/09/nanogenmo-2021</id><content type="html" xml:base="https://victorangeloblancada.github.io/blog/2021/10/09/nanogenmo-2021.html">&lt;p&gt;I participated in &lt;a href=&quot;https://github.com/NaNoGenMo/2021&quot;&gt;National Novel Generation Month for 2021&lt;/a&gt;.  &lt;a href=&quot;https://github.com/victorangeloblancada/nanogenmo-2021-vab&quot;&gt;See here&lt;/a&gt; for my GitHub repository with my code and my final novel.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://victorangeloblancada.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://victorangeloblancada.github.io/" rel="alternate" type="text/html" /><updated>2022-03-30T11:04:55+08:00</updated><id>https://victorangeloblancada.github.io/feed.xml</id><title type="html">Victor Angelo Blancada</title><subtitle>Victor Angelo Blancada is a data scientist, AI developer, and strategy consultant with proven experience in improving operational efficiency through predictive modeling and AI-powered automation.</subtitle><entry><title type="html">Finance from First Principles</title><link href="https://victorangeloblancada.github.io/blog/2022/03/20/finance-from-first-principles.html" rel="alternate" type="text/html" title="Finance from First Principles" /><published>2022-03-20T00:00:00+08:00</published><updated>2022-03-20T00:00:00+08:00</updated><id>https://victorangeloblancada.github.io/blog/2022/03/20/finance-from-first-principles</id><content type="html" xml:base="https://victorangeloblancada.github.io/blog/2022/03/20/finance-from-first-principles.html">&lt;script type=&quot;text/javascript&quot; async=&quot;&quot; src=&quot;https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML&quot;&gt;
+&lt;/script&gt;
+
+&lt;p&gt;As developers and data scientists rise in rank and expand their scope, finance becomes an unavoidable part of their responsibilities. This post is meant to serve as a reference of basic finance formulas with annotations designed to make the formulas easier to grok for engineers.&lt;/p&gt;
+
+&lt;h2 id=&quot;annual-time-value-of-money&quot;&gt;Annual Time Value of Money&lt;/h2&gt;
+
+&lt;h4 id=&quot;future-value&quot;&gt;Future Value&lt;/h4&gt;
+
+&lt;!--$$FV = PV (1+r)^n$$--&gt;
+&lt;p&gt;` FV = PV(1+r)^n `&lt;/p&gt;
+
+&lt;p&gt;This just means that the future value of a present sum of money must be adjusted by the rate.&lt;/p&gt;
+
+&lt;h4 id=&quot;present-value&quot;&gt;Present Value&lt;/h4&gt;
+
+&lt;!--$$PV=\frac{FV}{(1+r)^n}$$--&gt;
+&lt;p&gt;` PV = (FV)/(1+r)^n `&lt;/p&gt;
+
+&lt;p&gt;See future value above.&lt;/p&gt;
+
+&lt;h4 id=&quot;rate&quot;&gt;Rate&lt;/h4&gt;
+
+&lt;!--$$r=(\frac{FV}{PV})^\frac{1}{n}−1$$--&gt;
+&lt;p&gt;` r = ((FV)/(PV))^(1/n)-1 `&lt;/p&gt;
+
+&lt;p&gt;The rate can be calculated by getting the ratio of the future value compared to the present value then taking its nth root, where n is the number of compounding periods (usually in years).&lt;/p&gt;
+
+&lt;h4 id=&quot;years&quot;&gt;Years&lt;/h4&gt;
+
+&lt;!--$$n=\frac{log(\frac{FV}{PV})}{log(1+r)}$$--&gt;
+&lt;p&gt;` n = (log((FV)/(PV))) / (log(1+r)) `&lt;/p&gt;
+
+&lt;p&gt;The number of years can be calculated by first getting the ratio of the future value compared to the present value. Based on the previous formulas, this ratio is equivalent to one plus the rate raised by the number of compounding periods.&lt;/p&gt;
+
+&lt;p&gt;` (1+r)^n=(FV)/(PV)`&lt;/p&gt;
+
+&lt;p&gt;Take the logarithm of both sides with base (1+r).&lt;/p&gt;
+
+&lt;h6 id=&quot;-nlog_1r1rlog_1rfvpv&quot;&gt;` n*log_(1+r)(1+r)=log_(1+r)((FV)/(PV))`&lt;/h6&gt;
+
+&lt;p&gt;` log_(1+r)(1+r)` cancels out to one and n is now isolated on the left hand side. Use the logarithm change of base rule to evaluate the right hand side.&lt;/p&gt;
+
+&lt;p&gt;` n = (log((FV)/(PV))) / (log(1+r)) `&lt;/p&gt;
+
+&lt;h2 id=&quot;sub-annual-time-value-of-money&quot;&gt;Sub-Annual Time Value of Money&lt;/h2&gt;
+
+&lt;p&gt;This section is almost exactly the same as the Annual Time Value of Money formulas except that the compounding periods are not strictly annual.&lt;/p&gt;
+
+&lt;h4 id=&quot;future-value-1&quot;&gt;Future Value&lt;/h4&gt;
+
+&lt;!--FV=PV(1+(rp))npFV=PV(1+(rp))np--&gt;
+&lt;p&gt;` FV = PV(1+(r/p))^(np) `&lt;/p&gt;
+
+&lt;h4 id=&quot;future-value-with-continuous-compounding&quot;&gt;Future Value with Continuous Compounding&lt;/h4&gt;
+
+&lt;p&gt;` FV = PV*(e^(rn)) `&lt;/p&gt;
+
+&lt;h4 id=&quot;present-value-1&quot;&gt;Present Value&lt;/h4&gt;
+
+&lt;p&gt;` PV = (FV)/(1+(r/p))^(np) `&lt;/p&gt;
+
+&lt;h4 id=&quot;stated-annual-rate&quot;&gt;Stated Annual Rate&lt;/h4&gt;
+
+&lt;p&gt;` r = p[((FV)/(PV))^(1/(np))-1] `&lt;/p&gt;
+
+&lt;h4 id=&quot;period-rate&quot;&gt;Period Rate&lt;/h4&gt;
+
+&lt;p&gt;` r/p = ((FV)/(PV))^(1/(np))-1 `&lt;/p&gt;
+
+&lt;h4 id=&quot;effective-annual-rate&quot;&gt;Effective Annual Rate&lt;/h4&gt;
+
+&lt;p&gt;` r_(effective) = (1+(r_(stated)/p))^p-1 `&lt;/p&gt;
+
+&lt;h4 id=&quot;periods&quot;&gt;Periods&lt;/h4&gt;
+
+&lt;p&gt;` np = (log((FV)/(PV))) / (log(1+(r/p))) `&lt;/p&gt;
+
+&lt;h4 id=&quot;years-1&quot;&gt;Years&lt;/h4&gt;
+
+&lt;p&gt;` n = (log((FV)/(PV))) / (plog(1+(r/p))) `&lt;/p&gt;
+
+&lt;h2 id=&quot;constant-annuityperpetuity&quot;&gt;Constant Annuity/Perpetuity&lt;/h2&gt;
+
+&lt;h4 id=&quot;constant-perpetuity-present-value&quot;&gt;Constant Perpetuity Present Value&lt;/h4&gt;
+
+&lt;p&gt;` PV = (PMT)/r `&lt;/p&gt;
+
+&lt;h4 id=&quot;constant-perpetuity-payment&quot;&gt;Constant Perpetuity Payment&lt;/h4&gt;
+
+&lt;p&gt;` PMT = PV*r `&lt;/p&gt;
+
+&lt;h4 id=&quot;constant-annuity-present-value&quot;&gt;Constant Annuity Present Value&lt;/h4&gt;
+
+&lt;p&gt;` PV = ((PMT)/r)*[1-(1/(1+r)^n)] `&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;where n is the number of years of payments&lt;/em&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;sub-annual-constant-annuity-present-value&quot;&gt;Sub-Annual Constant Annuity Present Value&lt;/h4&gt;
+
+&lt;p&gt;` PV = ((PMT)/(r/p))&lt;em&gt;[1-(1/(1+(r/p))^(n&lt;/em&gt;p))] `&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;where n is the number of years of payments and p is the number of payments per year&lt;/em&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;constant-annuity-payment&quot;&gt;Constant Annuity Payment&lt;/h4&gt;
+
+&lt;p&gt;` PMT = (PV*r)/[1-(1/(1+r)^n)] `&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;where n is the number of years of payments&lt;/em&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;sub-annual-constant-annuity-payment&quot;&gt;Sub-Annual Constant Annuity Payment&lt;/h4&gt;
+
+&lt;p&gt;` PMT = (PV(r/p))/[1-(1/(1+(r/p))^(np))] `&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;where n is the number of years of payments and p is the number of payments per year&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;growing-annuityperpetuity&quot;&gt;Growing Annuity/Perpetuity&lt;/h2&gt;
+
+&lt;h4 id=&quot;growing-perpetuity-present-value&quot;&gt;Growing Perpetuity Present Value&lt;/h4&gt;
+
+&lt;p&gt;` PV = (PMT)/(r-g) `&lt;/p&gt;
+
+&lt;p&gt;for r&amp;gt;g&lt;/p&gt;
+
+&lt;h4 id=&quot;growing-perpetuity-payment&quot;&gt;Growing Perpetuity Payment&lt;/h4&gt;
+
+&lt;p&gt;` PMT = PV*(r-g) `&lt;/p&gt;
+
+&lt;p&gt;for r&amp;gt;g&lt;/p&gt;
+
+&lt;h4 id=&quot;growing-annuity-present-value&quot;&gt;Growing Annuity Present Value&lt;/h4&gt;
+
+&lt;p&gt;` PV = (PMT)/(r-g) * [1-((1+g)/(1+r))^n] `&lt;/p&gt;
+
+&lt;p&gt;for r&amp;gt;g&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;where n is the number of years of payments&lt;/em&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;sub-annual-growing-annuity-present-value&quot;&gt;Sub-Annual Growing Annuity Present Value&lt;/h4&gt;
+
+&lt;p&gt;` PV = ((PMT)/(r/p-g/p))[1-((1+g/p)/(1+r/p))^(np)] `&lt;/p&gt;
+
+&lt;p&gt;for r&amp;gt;g&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;where n is the number of years of payments and p is the number of payments per year&lt;/em&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;growing-annuity-payment&quot;&gt;Growing Annuity Payment&lt;/h4&gt;
+
+&lt;p&gt;` PMT = (PV*(r-g)) / [1-((1+g)/(1+r))^n] `&lt;/p&gt;
+
+&lt;p&gt;for r&amp;gt;g&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;where n is the number of years of payments&lt;/em&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;sub-annual-growing-annuity-payment&quot;&gt;Sub-Annual Growing Annuity Payment&lt;/h4&gt;
+
+&lt;p&gt;` PMT = (PV(r/p-g/p))/[1-((1+g/p)/(1+r/p))^(np)] `&lt;/p&gt;
+
+&lt;p&gt;for r&amp;gt;g&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;where n is the number of years of payments and p is the number of payments per year&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;bonds&quot;&gt;Bonds&lt;/h2&gt;
+
+&lt;h4 id=&quot;present-value-annual&quot;&gt;Present Value (Annual)&lt;/h4&gt;
+
+&lt;p&gt;` PV = (FV)/(1+r)^n `&lt;/p&gt;
+
+&lt;h4 id=&quot;present-value-sub-annual&quot;&gt;Present Value (Sub-Annual)&lt;/h4&gt;
+
+&lt;p&gt;` PV = (FV)/(1+(r/p))^(np) `&lt;/p&gt;
+
+&lt;h4 id=&quot;annuity-present-value-annual&quot;&gt;Annuity Present Value (Annual)&lt;/h4&gt;
+
+&lt;p&gt;` PV = ((PMT)/r) * [1-(1/(1+r)^n)] `&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;where n is the number of years of payments&lt;/em&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;annuity-present-value-sub-annual&quot;&gt;Annuity Present Value (Sub-Annual)&lt;/h4&gt;
+
+&lt;p&gt;` PV = ((PMT)/(r/p)) * [1-(1/(1+(r/p))^(np))] `&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;where n is the number of years of payments and p is the number of payments per year&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;net-present-value&quot;&gt;Net Present Value&lt;/h2&gt;
+
+&lt;h4 id=&quot;net-present-value-1&quot;&gt;Net Present Value&lt;/h4&gt;
+
+&lt;p&gt;` NPV = FV_0 + ((FV_1)/(1+r)) + ((FV_2)/(1+r)^2) + ((FV_3)/(1+r)^3) + … + ((FV_n)/(1+r)^n) `&lt;/p&gt;
+
+&lt;!--&lt;script&gt;
+	function calcPercent(a, b) {
+		// The function displays text expressing the relation between two numbers as percentages
+		if (isNaN(parseFloat(a))|isNaN(parseFloat(b))){
+			document.getElementById(&apos;results&apos;).innerHTML = &apos;Please enter numeric values only&apos;
+		} else {
+			document.getElementById(&apos;results&apos;).innerHTML = &apos;The following percentage relationships are true:&apos;
+			document.getElementById(&apos;results&apos;).innerHTML += &apos;&lt;p&gt;&apos;+a+&apos; is &apos;+100*parseFloat(a)/parseFloat(b)+&apos;% of &apos;+b+&apos;.&lt;/p&gt;&apos;
+			document.getElementById(&apos;results&apos;).innerHTML += &apos;&lt;p&gt;&apos;+b+&apos; is &apos;+100*parseFloat(b)/parseFloat(a)+&apos;% of &apos;+a+&apos;.&lt;/p&gt;&apos;
+			if (parseFloat(a)&gt;parseFloat(b)) {
+				document.getElementById(&apos;results&apos;).innerHTML += &apos;&lt;p&gt;&apos;+a+&apos; is &apos;+100*(parseFloat(a)-parseFloat(b))/parseFloat(b)+&apos;% larger than &apos;+b+&apos;.&lt;/p&gt;&apos;
+				document.getElementById(&apos;results&apos;).innerHTML += &apos;&lt;p&gt;&apos;+b+&apos; is &apos;+100*(parseFloat(a)-parseFloat(b))/parseFloat(a)+&apos;% smaller than &apos;+a+&apos;.&lt;/p&gt;&apos;
+			} else {
+				document.getElementById(&apos;results&apos;).innerHTML += &apos;&lt;p&gt;&apos;+a+&apos; is &apos;+100*(parseFloat(b)-parseFloat(a))/parseFloat(b)+&apos;% smaller than &apos;+b+&apos;.&lt;/p&gt;&apos;
+				document.getElementById(&apos;results&apos;).innerHTML += &apos;&lt;p&gt;&apos;+b+&apos; is &apos;+100*(parseFloat(b)-parseFloat(a))/parseFloat(a)+&apos;% larger than &apos;+a+&apos;.&lt;/p&gt;&apos;
+			}
+		}
+	}
+&lt;/script&gt;
+
+&lt;form onload=&quot;calcPercent(document.getElementById(&apos;a&apos;).value, document.getElementById(&apos;b&apos;).value)&quot;&gt;
+	&lt;p&gt;Number A: &lt;input type=&quot;text&quot; id=&quot;a&quot; value=&quot;10&quot; onchange=&quot;calcPercent(document.getElementById(&apos;a&apos;).value, document.getElementById(&apos;b&apos;).value)&quot;&gt;&lt;/p&gt;
+	&lt;p&gt;Number B: &lt;input type=&quot;text&quot; id=&quot;b&quot; value=&quot;5&quot; onchange=&quot;calcPercent(document.getElementById(&apos;a&apos;).value, document.getElementById(&apos;b&apos;).value)&quot;&gt;&lt;/p&gt;
+	&lt;div id=&quot;results&quot;&gt;
+		Results will show here 
+	&lt;/div&gt;
+&lt;/form&gt;--&gt;</content><author><name></name></author><category term="blog" /><category term="blog" /><category term="math" /><category term="mathematics" /><category term="business" /><category term="finance" /><summary type="html"></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://victorangeloblancada.github.io/assets/images/finance.jpg" /><media:content medium="image" url="https://victorangeloblancada.github.io/assets/images/finance.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">NaNoGenMo 2021</title><link href="https://victorangeloblancada.github.io/blog/2021/10/09/nanogenmo-2021.html" rel="alternate" type="text/html" title="NaNoGenMo 2021" /><published>2021-10-09T00:00:00+08:00</published><updated>2021-10-09T00:00:00+08:00</updated><id>https://victorangeloblancada.github.io/blog/2021/10/09/nanogenmo-2021</id><content type="html" xml:base="https://victorangeloblancada.github.io/blog/2021/10/09/nanogenmo-2021.html">&lt;p&gt;I participated in &lt;a href=&quot;https://github.com/NaNoGenMo/2021&quot;&gt;National Novel Generation Month for 2021&lt;/a&gt;.  &lt;a href=&quot;https://github.com/victorangeloblancada/nanogenmo-2021-vab&quot;&gt;See here&lt;/a&gt; for my GitHub repository with my code and my final novel.&lt;/p&gt;
 
 &lt;p&gt;I was inspired by &lt;a href=&quot;https://abstrusegoose.com/98&quot;&gt;this Abstruse Goose comic&lt;/a&gt;:
 &lt;img src=&quot;/assets/images/computer_programming_101.png&quot; alt=&quot;Abstruse Goose 98&quot; /&gt;&lt;/p&gt;
@@ -1500,44 +1716,4 @@
 
 &lt;p&gt;&lt;img src=&quot;/assets/images/color-palette-clustered.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Voila!&lt;/p&gt;</content><author><name></name></author><category term="blog" /><category term="color palette" /><category term="image processing" /><category term="kmeans" /><category term="clustering" /><summary type="html">K-means clustering is an unsupervised learning technique that groups individual data points by identifying centroids such that each individual data point is assigned a cluster based on which centroid is closest to it in n-dimensional space. The goal of K-means clustering is to find the set of K centroids such that the difference between individual data points within a cluster is minimized. The cluster centroids therefore serve as the “prototype” of the cluster.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://victorangeloblancada.github.io/assets/images/color-palette.jpg" /><media:content medium="image" url="https://victorangeloblancada.github.io/assets/images/color-palette.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Gifs from Command Line</title><link href="https://victorangeloblancada.github.io/blog/2019/09/20/command-line-gifs.html" rel="alternate" type="text/html" title="Gifs from Command Line" /><published>2019-09-20T00:00:00+08:00</published><updated>2019-09-20T00:00:00+08:00</updated><id>https://victorangeloblancada.github.io/blog/2019/09/20/command-line-gifs</id><content type="html" xml:base="https://victorangeloblancada.github.io/blog/2019/09/20/command-line-gifs.html">&lt;p&gt;Although many people still disagree over how it is supposed to be pronounced, the gif is undeniably a key element of modern media, with its ubiquitous use across the Internet. While the gif has permeated social media, there are few places online with such a vibrant community of grassroots gif creators as Tumblr. A quick review of Tumblr gif sets shows that most creators use Adobe Photoshop to create gifs, but one need not pay up and subscribe to Adobe Creative Cloud to make animated gifs.&lt;/p&gt;
-
-&lt;p&gt;Enter FFmpeg. FFmpeg is a free and open source suite of command line tools for processing audio and video files. In the developers’ words: &lt;em&gt;“FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge.”&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;So, are you ready to get into the world of gif creation? First off, download and install FFmpeg from &lt;a href=&quot;https://www.ffmpeg.org/download.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Once FFmpeg has been installed, you can immediately try to convert any video from any format to a gif, with just a single line on the terminal/ command prompt:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;ffmpeg &lt;span class=&quot;nt&quot;&gt;-ss&lt;/span&gt; 2 &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; 4 &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; input.mp4 &lt;span class=&quot;nt&quot;&gt;-filter_complex&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;scale=320:-1&quot;&lt;/span&gt; output.gif&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Let’s break down those that command and its arguments:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;ffmpeg - This calls the FFmpeg program.&lt;/li&gt;
-  &lt;li&gt;-ss - This is the start time for video conversion, where -ss 2 stands for 2 seconds.&lt;/li&gt;
-  &lt;li&gt;-t - This is the duration of video conversion. -t 4 means that FFmpeg will convert 4 seconds of the video. Together with -ss 2, this means that FFmpeg will only convert frames from the 2 seconds into the video to 4 seconds later or 6 seconds from the beginning.&lt;/li&gt;
-  &lt;li&gt;-i - This points FFmpeg to the input video for conversion.&lt;/li&gt;
-  &lt;li&gt;-filter_complex “scale=320:-1” - The -&lt;a href=&quot;https://ffmpeg.org/ffmpeg-filters.html&quot;&gt;filter_complex&lt;/a&gt; argument allows users to specify filters. In this case, the scale filter resizes the image to 320 width while keeping the aspect ratio (the -1 length value).&lt;/li&gt;
-  &lt;li&gt;output.gif - The output filename is given at the end of the command.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Running this command on a video can give us this image:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/gif1.gif&quot; alt=&quot;Output gif&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;So far so good, but the quality could improve.&lt;/p&gt;
-
-&lt;p&gt;One of the main drivers of gif quality is its color palette. Thanks to the work of some FFmpeg  developers, namely &lt;a href=&quot;http://blog.pkh.me/p/21-high-quality-gif-with-ffmpeg.html&quot;&gt;ubitux&lt;/a&gt;, FFmpeg includes both a function to define a color palette based on a video and a function to encode a video using a specified color palette. We can use these functions to make a better quality gif by extracting a custom color palatte and using that to encode the gif.&lt;/p&gt;
-
-&lt;p&gt;Back to the command prompt:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;ffmpeg &lt;span class=&quot;nt&quot;&gt;-ss&lt;/span&gt; 2 &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; 4 &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; input.mp4 &lt;span class=&quot;nt&quot;&gt;-filter_complex&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[0:v] palettegen&quot;&lt;/span&gt; palette.png
-ffmpeg &lt;span class=&quot;nt&quot;&gt;-ss&lt;/span&gt; 2 &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; 4 &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; input.mp4 &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; palette.png &lt;span class=&quot;nt&quot;&gt;-filter_complex&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[0:v][1:v] paletteuse, scale=320:-1&quot;&lt;/span&gt; output.gif&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;The first line above uses the &lt;a href=&quot;https://ffmpeg.org/ffmpeg-filters.html#palettegen-1&quot;&gt;palettegen&lt;/a&gt; filter to generate a 256 color palette to be used in GIF encoding in the next step.&lt;/p&gt;
-
-&lt;p&gt;The second line contains two -i arguments, the source video (input.mp4) and the color palette generated from the first line (palette.png). The -filter_complex argument uses the &lt;a href=&quot;http://ffmpeg.org/ffmpeg-filters.html#paletteuse&quot;&gt;palatteuse&lt;/a&gt; filter to apply the color palatte to the source video through downsampling.&lt;/p&gt;
-
-&lt;p&gt;Running the code above generates the following image:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/gif2.gif&quot; alt=&quot;Output gif&quot; /&gt;&lt;/p&gt;</content><author><name></name></author><category term="blog" /><category term="gif" /><category term="command line" /><category term="coding" /><category term="gifs" /><category term="tumblr" /><summary type="html">Although many people still disagree over how it is supposed to be pronounced, the gif is undeniably a key element of modern media, with its ubiquitous use across the Internet. While the gif has permeated social media, there are few places online with such a vibrant community of grassroots gif creators as Tumblr. A quick review of Tumblr gif sets shows that most creators use Adobe Photoshop to create gifs, but one need not pay up and subscribe to Adobe Creative Cloud to make animated gifs.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://victorangeloblancada.github.io/assets/images/terminal.jpg" /><media:content medium="image" url="https://victorangeloblancada.github.io/assets/images/terminal.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+&lt;p&gt;Voila!&lt;/p&gt;</content><author><name></name></author><category term="blog" /><category term="color palette" /><category term="image processing" /><category term="kmeans" /><category term="clustering" /><summary type="html">K-means clustering is an unsupervised learning technique that groups individual data points by identifying centroids such that each individual data point is assigned a cluster based on which centroid is closest to it in n-dimensional space. The goal of K-means clustering is to find the set of K centroids such that the difference between individual data points within a cluster is minimized. The cluster centroids therefore serve as the “prototype” of the cluster.</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://victorangeloblancada.github.io/assets/images/color-palette.jpg" /><media:content medium="image" url="https://victorangeloblancada.github.io/assets/images/color-palette.jpg" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
