@@ -71,80 +71,72 @@ html {
   scroll-behavior: smooth; }
 
 body {
-font-family: Merriweather, Georgia, Garamond, serif;
-font-size: clamp(14px, 1.8vw, 18px);
-font-weight: 300;
-line-height: 1.75;
-background-color: #FFF;
-color: #22181C;
-}
+  font-family: Merriweather, Georgia, Garamond, serif;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 28px;
+  background-color: #FFF;
+  color: #22181C; }
 
 h1, h2, h3, h4, h5, h6 {
-font-family: Oswald, Bahnschrift, Impact, serif;
-line-height: 1.5em;
-letter-spacing: 0.0625em;
-}
+  font-family: Oswald, Bahnschrift, Impact, serif;
+  line-height: 1.5em;
+  letter-spacing: 0.0625em; }
 
-h1 {
-font-size: clamp(2rem, 6vw, 4rem);
-font-weight: 400;
-}
+h1, h2, h3 {
+  font-weight: 400; }
 
-h2 {
-font-size: clamp(1.8rem, 5vw, 3rem);
-}
+h4, h5, h6 {
+  font-weight: 300; }
 
-h3 {
-font-size: clamp(1.5rem, 4vw, 2.5rem);
-}
+@media screen and (min-width: 320px) {
+  body {
+    font-size: 2.2vmax; }
 
-h4 {
-font-size: clamp(1.2rem, 3vw, 2rem);
-}
+  h1 {
+    font-size: 5vmax; }
 
-h5 {
-font-size: clamp(1rem, 2.5vw, 1.5rem);
-}
+  h2 {
+    font-size: 3.33vmax; }
 
-h6 {
-font-size: clamp(0.875rem, 2vw, 1.25rem);
-}
+  h3 {
+    font-size: 2.93vmax; }
 
-blockquote {
-font-family: Fanwood, Garamond, Georgia, serif;
-font-size: clamp(1.2rem, 3vw, 2rem);
-line-height: 1.8;
-font-style: italic;
-padding-left: 1rem;
-border-left: 3px solid #F58A07;
-}
+  h4 {
+    font-size: 2.5vmax; }
 
-@media screen and (max-width: 480px) {
-body {
-font-size: 16px;
-}
-h1 {
-font-size: 2.5rem;
-}
-h2 {
-font-size: 2rem;
-}
-}
+  h5 {
+    font-size: 2.08vmax; }
 
-@media screen and (min-width: 1024px) {
-body {
-font-size: 18px;
-}
-}
+  h6 {
+    font-size: 1.68vmax; }
 
-@media screen and (min-width: 1800px) {
-body {
-font-size: 20px;
-}
-h1 {
-font-size: 5rem;
-}
-}
+  blockquote {
+    font-size: 5vmax; } }
+@media screen and (min-width: 1000px) {
+  body {
+    font-size: 16px; }
+
+  h1 {
+    font-size: 50px; }
+
+  h2 {
+    font-size: 34px; }
+
+  h3 {
+    font-size: 30px; }
+
+  h4 {
+    font-size: 25px; }
+
+  h5 {
+    font-size: 21px; }
+
+  h6 {
+    font-size: 17px; }
+
+  blockquote {
+    font-size: 34px; } }
 a {
   color: #084887;
   fill: #084887; }
