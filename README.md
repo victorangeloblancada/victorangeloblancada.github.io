@@ -1,5 +1,4 @@
 # victorangeloblancada.github.io
-<<<<<<< HEAD
 
 Personal portfolio, technical publication, and interactive research laboratory for **Victor Angelo Blancada**, migrated from Jekyll to **Astro** static site generation with **Pagefind** search, build-time **KaTeX**, **Shiki**, **D3.js** / **Canvas** experiments, and automated **GitHub Actions** deployment to GitHub Pages.
 
@@ -73,8 +72,8 @@ Google Tag Manager (`GTM-5S5WB7M`) and Google Analytics 4 (`G-ERJECQ081H`) are *
 - **Local / `.env` (optional, never commit `.env`):**
   ```bash
   PUBLIC_ENABLE_ANALYTICS=true
-  PUBLIC_GTM_ID=GTM-5S5WB7M
-  PUBLIC_GA4_ID=G-ERJECQ081H
+  PUBLIC_GTM_ID=
+  PUBLIC_GA4_ID=
   ```
 - **GitHub Actions Production Deployment:**
   1. Open your GitHub repository → **Settings → Secrets and variables → Actions → Variables**.
@@ -111,6 +110,3 @@ The workflow in [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml)
 - [`DESIGN_BRIEF.md`](./DESIGN_BRIEF.md) — Editorial positioning and visual design directions
 - [`QA_REPORT.md`](./QA_REPORT.md) — Automated build, route, link, math, feed, and preview verification results
 - [`AGENTS.md`](./AGENTS.md) — Repository engineering rules and migration invariants
-=======
-This is the repository for my personal website. I have coded this site myself, using a template I created using my other GitHub account, naturalproblemsolver, and many code snippets from various Jekyll projects. 
->>>>>>> origin/master
