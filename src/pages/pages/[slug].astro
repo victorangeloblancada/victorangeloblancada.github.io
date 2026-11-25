@@ -1,0 +1,29 @@
+---
+import { getCollection, render } from 'astro:content';
+import ProfileLayout from '../../layouts/ProfileLayout.astro';
+import { siteConfig } from '../../config/site';
+
+export async function getStaticPaths() {
+  const allPages = await getCollection('pages');
+  return allPages.map((entry) => ({
+    params: { slug: entry.id.replace(/\.(md|mdx)$/i, '') },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const slug = entry.id.replace(/\.(md|mdx)$/i, '');
+const canonicalUrl = new URL(`/pages/${slug}.html`, siteConfig.siteUrl).toString();
+---
+
+<ProfileLayout
+  title={entry.data.title}
+  headerHtml={entry.data.header}
+  description={entry.data.description}
+  image={entry.data.image}
+  canonicalUrl={canonicalUrl}
+  isProfile={entry.data.layout === 'profile'}
+>
+  <Content />
+</ProfileLayout>

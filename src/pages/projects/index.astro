@@ -1,0 +1,130 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout
+  title="Selected Work & Case Studies"
+  description="Enterprise Generative AI systems, warehouse digital twins, global sustainability data lakes, and optimization platforms delivered across logistics, telecom, and media."
+>
+  <section class="container projects-shell">
+    <header class="projects-header fade-settle">
+      <div class="section-kicker">Portfolio · {projects.length} Case Studies</div>
+      <h1 class="projects-title">Selected Work</h1>
+      <p class="projects-lead">
+        Production data science, Generative AI, and operations research systems built across supply chain management, telecommunications, and marketing analytics.
+      </p>
+    </header>
+
+    <div class="hairline-grid projects-grid">
+      {
+        projects.map((proj, idx) => (
+          <a href={`/projects/${proj.id}/`} class="hairline-cell proj-card">
+            <div class="proj-meta mono-meta">
+              <span>0{idx + 1}</span>
+              <span>·</span>
+              <span>{proj.data.organization}</span>
+              {proj.data.period && <span>· {proj.data.period}</span>}
+              <span class="proj-status">{proj.data.status}</span>
+            </div>
+            <h2 class="proj-title">{proj.data.title}</h2>
+            <p class="proj-desc">{proj.data.description}</p>
+            <div class="proj-foot">
+              {proj.data.impactMetric && (
+                <span class="mono-meta proj-impact">{proj.data.impactMetric}</span>
+              )}
+              <ul class="tag-list">
+                {proj.data.technologies.slice(0, 4).map((tech) => (
+                  <li class="tag-chip">{tech}</li>
+                ))}
+              </ul>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .projects-shell {
+    padding-block: clamp(2rem, 4vw, 3.5rem) clamp(3rem, 5vw, 5rem);
+  }
+
+  .projects-header {
+    margin-bottom: 2rem;
+  }
+
+  .projects-title {
+    margin: 0.4rem 0 0.65rem;
+    font-size: var(--text-3xl);
+    letter-spacing: -0.03em;
+  }
+
+  .projects-lead {
+    color: var(--ink-secondary);
+    max-width: 64ch;
+    margin: 0;
+  }
+
+  .projects-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+
+  .proj-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .proj-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .proj-status {
+    margin-left: auto;
+    padding: 0.08rem 0.45rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    text-transform: uppercase;
+    font-size: 0.66rem;
+  }
+
+  .proj-title {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--ink-primary);
+  }
+
+  .proj-card:hover .proj-title {
+    color: var(--accent);
+  }
+
+  .proj-desc {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    line-height: 1.55;
+  }
+
+  .proj-foot {
+    margin-top: auto;
+    padding-top: 0.75rem;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .proj-impact {
+    color: var(--accent);
+    font-weight: 600;
+  }
+</style>

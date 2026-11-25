@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { siteConfig } from '../../config/site';
+---
+
+<BaseLayout
+  title="Contact"
+  description="Connect with Victor Angelo Blancada on LinkedIn, GitHub, or email."
+>
+  <section class="container contact-shell">
+    <header class="contact-header fade-settle">
+      <div class="section-kicker">Connect</div>
+      <h1 class="contact-headline">Get in Touch</h1>
+      <p class="contact-lead">
+        Reach out for discussions on supply chain analytics, Generative AI architecture, technical advisory, or research collaborations.
+      </p>
+    </header>
+
+    <div class="hairline-grid contact-grid">
+      <a
+        href={siteConfig.author.linkedinUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hairline-cell contact-card"
+      >
+        <span class="mono-meta">Professional Profile</span>
+        <h2>LinkedIn ↗</h2>
+        <p>linkedin.com/in/geloblancada</p>
+      </a>
+
+      <a
+        href={siteConfig.author.githubUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hairline-cell contact-card"
+      >
+        <span class="mono-meta">Open Source &amp; Code</span>
+        <h2>GitHub ↗</h2>
+        <p>github.com/victorangeloblancada</p>
+      </a>
+
+      <a href={`mailto:${siteConfig.author.email}`} class="hairline-cell contact-card">
+        <span class="mono-meta">Direct Correspondence</span>
+        <h2>Email</h2>
+        <p>{siteConfig.author.email}</p>
+      </a>
+
+      <a href="/pages/resume-downloads.html" class="hairline-cell contact-card">
+        <span class="mono-meta">Curriculum Vitae</span>
+        <h2>Résumé Downloads</h2>
+        <p>/pages/resume-downloads.html</p>
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-shell {
+    padding-block: clamp(2.5rem, 5vw, 4rem) clamp(3rem, 5vw, 5rem);
+  }
+
+  .contact-header {
+    margin-bottom: 2rem;
+    max-width: 62ch;
+  }
+
+  .contact-headline {
+    margin: 0.45rem 0 0.75rem;
+    font-size: var(--text-3xl);
+    letter-spacing: -0.03em;
+  }
+
+  .contact-lead {
+    color: var(--ink-secondary);
+    margin: 0;
+  }
+
+  .contact-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  .contact-card {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .contact-card h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--ink-primary);
+  }
+
+  .contact-card:hover h2 {
+    color: var(--accent);
+  }
+
+  .contact-card p {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--ink-muted);
+    word-break: break-all;
+  }
+</style>

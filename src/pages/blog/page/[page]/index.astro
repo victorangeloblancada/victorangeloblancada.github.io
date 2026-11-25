@@ -1,0 +1,80 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import PostCard from '../../../../components/editorial/PostCard.astro';
+import { siteConfig } from '../../../../config/site';
+import { isPublishedPost, sortPostsDesc } from '../../../../utils/routing';
+
+export async function getStaticPaths() {
+  const allPublished = sortPostsDesc((await getCollection('blog')).filter(isPublishedPost));
+  const pageSize = siteConfig.pagination.postsPerPage;
+  const totalPages = Math.ceil(allPublished.length / pageSize);
+
+  return Array.from({ length: Math.max(0, totalPages - 1) }, (_, idx) => {
+    const pageNum = idx + 2;
+    const start = (pageNum - 1) * pageSize;
+    return {
+      params: { page: String(pageNum) },
+      props: {
+        pageNum,
+        totalPages,
+        posts: allPublished.slice(start, start + pageSize),
+      },
+    };
+  });
+}
+
+const { pageNum, totalPages, posts } = Astro.props;
+const prevHref = pageNum === 2 ? '/blog/' : `/blog/page/${pageNum - 1}/`;
+const nextHref = pageNum < totalPages ? `/blog/page/${pageNum + 1}/` : null;
+---
+
+<BaseLayout
+  title={`Writing Archive — Page ${pageNum}`}
+  description="Paginated archive of technical articles and essays."
+>
+  <section class="container archive-shell">
+    <header class="archive-header">
+      <div class="section-kicker">Writing Archive · Page {pageNum} of {totalPages}</div>
+      <h1 class="archive-title">All Articles</h1>
+    </header>
+
+    <div class="hairline-grid archive-grid">
+      {posts.map((post) => <PostCard post={post} level={2} />)}
+    </div>
+
+    <nav class="pagination-bar" aria-label="Blog pagination">
+      <a href={prevHref} class="btn">← Newer articles</a>
+      <span class="mono-meta">Page {pageNum} / {totalPages}</span>
+      {nextHref ? <a href={nextHref} class="btn">Older articles →</a> : <span />}
+    </nav>
+  </section>
+</BaseLayout>
+
+<style>
+  .archive-shell {
+    padding-block: clamp(2rem, 4vw, 3.5rem) clamp(3rem, 5vw, 5rem);
+  }
+
+  .archive-header {
+    margin-bottom: 1.75rem;
+  }
+
+  .archive-title {
+    margin: 0.4rem 0 0;
+    font-size: var(--text-3xl);
+    letter-spacing: -0.03em;
+  }
+
+  .archive-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+
+  .pagination-bar {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+</style>

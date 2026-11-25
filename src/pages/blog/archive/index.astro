@@ -1,0 +1,214 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { siteConfig } from '../../../config/site';
+import {
+  formatShortDate,
+  getPostDateParts,
+  getPostUrl,
+  isPublishedPost,
+  sortPostsDesc,
+} from '../../../utils/routing';
+import { estimateReadingTime } from '../../../utils/readingTime';
+import { normalizeTagSlug } from '../../../utils/tags';
+
+const canonicalUrl = new URL('/blog.html', siteConfig.siteUrl).toString();
+
+const allPublished = sortPostsDesc((await getCollection('blog')).filter(isPublishedPost));
+
+const byYear = new Map<string, typeof allPublished>();
+const tagCounts = new Map<string, number>();
+
+for (const post of allPublished) {
+  const { year } = getPostDateParts(post.data.date);
+  const arr = byYear.get(year) ?? [];
+  arr.push(post);
+  byYear.set(year, arr);
+
+  const uniqueTags = new Set(post.data.tags.map(normalizeTagSlug));
+  for (const t of uniqueTags) {
+    tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
+  }
+}
+
+const years = Array.from(byYear.entries()).sort((a, b) => Number(b[0]) - Number(a[0]));
+const tags = Array.from(tagCounts.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+---
+
+<BaseLayout
+  title="Blog — Complete Archive & Tag Directory"
+  description="Complete chronological index and normalized topic directory for all published articles."
+  canonicalUrl={canonicalUrl}
+>
+  <section class="container blog-index-shell">
+    <header class="blog-index-header fade-settle">
+      <div class="section-kicker">Complete Archive · {allPublished.length} Published Posts</div>
+      <h1 class="blog-index-title">Chronological Index &amp; Topics</h1>
+      <p class="blog-index-lead">
+        Every published essay from 2017 to present, preserved at its original permalink. Prefer a card view? Visit <a href="/blog/">/blog/</a> or <a href="/search/">search the archive</a>.
+      </p>
+    </header>
+
+    <div class="blog-index-layout">
+      <div class="year-groups">
+        {
+          years.map(([year, posts]) => (
+            <section class="year-block" aria-labelledby={`year-${year}`}>
+              <div class="year-heading-row">
+                <h2 id={`year-${year}`}>
+                  <a href={`/blog/year/${year}/`}>{year}</a>
+                </h2>
+                <span class="mono-meta">{posts.length} posts</span>
+              </div>
+              <ul class="archive-rows">
+                {posts.map((post) => {
+                  const reading = estimateReadingTime(post.body);
+                  return (
+                    <li class="archive-row">
+                      <time class="mono-meta row-date" datetime={post.data.date.toISOString().slice(0, 10)}>
+                        {formatShortDate(post.data.date)}
+                      </time>
+                      <a href={getPostUrl(post)} class="row-title">
+                        {post.data.title}
+                      </a>
+                      <span class="mono-meta row-read">{reading.label}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ))
+        }
+      </div>
+
+      <aside class="tags-directory" aria-labelledby="tags-dir-heading">
+        <h2 id="tags-dir-heading" class="tags-dir-title">
+          Post Tags ({tags.length})
+        </h2>
+        <ul class="tag-list">
+          {
+            tags.map(([slug, count]) => (
+              <li>
+                <a href={`/blog/tag/${slug}/`} class="tag-chip">
+                  {slug} ({count})
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .blog-index-shell {
+    padding-block: clamp(2rem, 4vw, 3.5rem) clamp(3rem, 5vw, 5rem);
+  }
+
+  .blog-index-header {
+    margin-bottom: 2.25rem;
+  }
+
+  .blog-index-title {
+    margin: 0.4rem 0 0.65rem;
+    font-size: var(--text-3xl);
+    letter-spacing: -0.03em;
+  }
+
+  .blog-index-lead {
+    margin: 0;
+    color: var(--ink-secondary);
+    max-width: 66ch;
+  }
+
+  .blog-index-layout {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 980px) {
+    .blog-index-layout {
+      grid-template-columns: 1.65fr 0.95fr;
+      align-items: start;
+    }
+  }
+
+  .year-groups {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .year-heading-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid var(--border-strong);
+  }
+
+  .year-heading-row h2 {
+    margin: 0;
+    font-size: 1.3rem;
+  }
+
+  .year-heading-row h2 a {
+    color: var(--ink-primary);
+    text-decoration: none;
+  }
+
+  .year-heading-row h2 a:hover {
+    color: var(--accent);
+  }
+
+  .archive-rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .archive-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.85rem;
+    align-items: baseline;
+    padding-block: 0.65rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .row-title {
+    color: var(--ink-primary);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .row-title:hover {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+
+  .row-read {
+    display: none;
+  }
+
+  @media (min-width: 600px) {
+    .row-read {
+      display: inline;
+    }
+  }
+
+  .tags-directory {
+    padding: 1.25rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+  }
+
+  .tags-dir-title {
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+</style>

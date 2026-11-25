@@ -1,0 +1,223 @@
+<section class="clustering-explorer" data-identity="laboratory" data-clustering-root>
+  <div class="explorer-toolbar hairline-grid">
+    <div class="hairline-cell control-cell">
+      <label for="cluster-preset" class="mono-meta">Dataset</label>
+      <select id="cluster-preset" class="control-input" data-preset-select>
+        <option value="blobs" selected>Gaussian Blobs</option>
+        <option value="moons">Two Moons</option>
+        <option value="anisotropic">Anisotropic</option>
+        <option value="uniform">Uniform Random</option>
+      </select>
+    </div>
+
+    <div class="hairline-cell control-cell">
+      <label for="cluster-k" class="mono-meta">
+        Clusters (k = <span data-k-value>4</span>)
+      </label>
+      <input
+        id="cluster-k"
+        type="range"
+        min="2"
+        max="8"
+        step="1"
+        value="4"
+        class="range-input"
+        data-k-slider
+      />
+    </div>
+
+    <div class="hairline-cell control-cell">
+      <label for="cluster-init" class="mono-meta">Initialization</label>
+      <select id="cluster-init" class="control-input" data-init-select>
+        <option value="kmeans++" selected>K-Means++</option>
+        <option value="random">Random</option>
+      </select>
+    </div>
+
+    <div class="hairline-cell control-actions">
+      <button type="button" class="btn btn-primary" data-step-btn>Step</button>
+      <button type="button" class="btn" data-play-btn>Play</button>
+      <button type="button" class="btn" data-reset-btn>Reset Init</button>
+      <button type="button" class="btn" data-regen-btn>New Data</button>
+    </div>
+  </div>
+
+  <div class="explorer-stage">
+    <div class="canvas-panel">
+      <canvas
+        class="cluster-canvas"
+        data-clustering-canvas
+        aria-label="Interactive two-dimensional K-Means clustering canvas. Click or tap anywhere on the plot to add a point."
+      ></canvas>
+      <p class="mono-meta canvas-hint">
+        Diamonds mark centroids with dashed drift trails. Click or tap anywhere on the plot to add custom points.
+      </p>
+      <noscript>
+        <svg viewBox="0 0 400 240" width="400" height="240" role="img" aria-label="Static fallback K-Means illustration">
+          <rect width="400" height="240" fill="none" stroke="currentColor" stroke-opacity="0.2" />
+          <circle cx="100" cy="80" r="6" fill="#d97706" />
+          <circle cx="120" cy="95" r="6" fill="#d97706" />
+          <circle cx="290" cy="70" r="6" fill="#0284c7" />
+          <circle cx="310" cy="90" r="6" fill="#0284c7" />
+          <circle cx="200" cy="175" r="6" fill="#059669" />
+          <circle cx="220" cy="190" r="6" fill="#059669" />
+          <text x="16" y="224" font-size="11" fill="currentColor">Enable JavaScript for interactive K-Means stepping.</text>
+        </svg>
+      </noscript>
+    </div>
+
+    <aside class="telemetry-panel" aria-label="Clustering telemetry">
+      <div class="telemetry-metric">
+        <span class="mono-meta">Status</span>
+        <strong data-stat-phase>Initialized</strong>
+      </div>
+      <div class="telemetry-metric">
+        <span class="mono-meta">Iteration</span>
+        <strong class="tabular" data-stat-iter>0</strong>
+      </div>
+      <div class="telemetry-metric">
+        <span class="mono-meta">WCSS Inertia</span>
+        <strong class="tabular" data-stat-wcss>0.00</strong>
+      </div>
+      <div class="telemetry-metric">
+        <span class="mono-meta">Reassigned</span>
+        <strong class="tabular" data-stat-moved>0</strong>
+      </div>
+
+      <div class="sparkline-box">
+        <div class="mono-meta">WCSS Convergence</div>
+        <svg data-wcss-sparkline class="wcss-sparkline" role="img" aria-label="WCSS inertia convergence curve"></svg>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .clustering-explorer {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .explorer-toolbar {
+    grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .control-cell {
+    display: grid;
+    gap: 0.45rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .control-input {
+    padding: 0.42rem 0.55rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    background: var(--bg-elevated);
+    font-size: 0.85rem;
+    min-height: 38px;
+  }
+
+  .range-input {
+    width: 100%;
+    accent-color: var(--accent);
+    cursor: pointer;
+    min-height: 36px;
+  }
+
+  .control-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .explorer-stage {
+    display: grid;
+    gap: 1rem;
+  }
+
+  @media (min-width: 880px) {
+    .explorer-stage {
+      grid-template-columns: 1.8fr 0.85fr;
+      align-items: start;
+    }
+  }
+
+  .canvas-panel {
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    overflow: hidden;
+  }
+
+  .cluster-canvas {
+    width: 100%;
+    display: block;
+    cursor: crosshair;
+    touch-action: manipulation;
+  }
+
+  .canvas-hint {
+    margin: 0;
+    padding: 0.55rem 0.9rem;
+    border-top: 1px solid var(--border-subtle);
+    background: var(--bg-surface);
+  }
+
+  .telemetry-panel {
+    display: grid;
+    gap: 0.65rem;
+    padding: 1rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+  }
+
+  .telemetry-metric {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .tabular {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sparkline-box {
+    display: grid;
+    gap: 0.4rem;
+    padding-top: 0.2rem;
+  }
+
+  .wcss-sparkline {
+    width: 100%;
+    height: 56px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elevated);
+  }
+</style>
+
+<script>
+  let cleanupFns: Array<() => void> = [];
+
+  async function initExplorers() {
+    cleanupFns.forEach((fn) => fn());
+    cleanupFns = [];
+    const roots = document.querySelectorAll<HTMLElement>('[data-clustering-root]');
+    if (!roots.length) return;
+    const { mountClusteringExplorer } = await import('../../scripts/clustering-explorer');
+    roots.forEach((el) => {
+      cleanupFns.push(mountClusteringExplorer(el));
+    });
+  }
+
+  initExplorers();
+  document.addEventListener('astro:page-load', initExplorers);
+</script>

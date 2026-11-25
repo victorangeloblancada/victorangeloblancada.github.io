@@ -1,0 +1,21 @@
+# Dependencies and build outputs
+node_modules/
+dist/
+.astro/
+
+# Legacy Jekyll outputs / local caches
+_site/
+.sass-cache/
+.bundle/
+
+# Environment and OS files
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+
+# Local analytics exports & knowledge graph cache
+Pages_and_screens_*.csv
+*Performance-on-Search*.xlsx
+graphify-out/

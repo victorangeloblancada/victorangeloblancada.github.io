@@ -1,0 +1,98 @@
+---
+import { siteConfig } from '../../config/site';
+
+export interface Props {
+  title: string;
+  urlPath: string;
+}
+
+const { title, urlPath } = Astro.props;
+const fullUrl = new URL(urlPath, siteConfig.siteUrl).toString();
+const encodedUrl = encodeURIComponent(fullUrl);
+const encodedTitle = encodeURIComponent(title);
+---
+
+<div class="share-row no-print">
+  <span class="mono-meta">Share:</span>
+  <a
+    class="share-btn"
+    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Share on LinkedIn"
+  >
+    LinkedIn
+  </a>
+  <a
+    class="share-btn"
+    href={`https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Share on X / Twitter"
+  >
+    X / Twitter
+  </a>
+  <a
+    class="share-btn"
+    href={`mailto:?subject=${encodedTitle}&body=${encodedUrl}`}
+    aria-label="Share via Email"
+  >
+    Email
+  </a>
+  <button type="button" class="share-btn" data-copy-link={fullUrl}>
+    Copy link
+  </button>
+</div>
+
+<style>
+  .share-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-surface);
+    color: var(--ink-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .share-btn:hover {
+    border-color: var(--accent-border);
+    color: var(--accent);
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    function bindCopyLink() {
+      document.querySelectorAll('[data-copy-link]').forEach(function (btn) {
+        if (btn.dataset.bound === '1') return;
+        btn.dataset.bound = '1';
+        btn.addEventListener('click', function () {
+          var url = btn.getAttribute('data-copy-link') || window.location.href;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(function () {
+              var orig = btn.textContent;
+              btn.textContent = 'Copied';
+              setTimeout(function () {
+                btn.textContent = orig;
+              }, 1600);
+            });
+          }
+        });
+      });
+    }
+    bindCopyLink();
+    document.addEventListener('astro:page-load', bindCopyLink);
+  })();
+</script>

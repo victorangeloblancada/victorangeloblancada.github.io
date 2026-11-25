@@ -1,0 +1,521 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/editorial/PostCard.astro';
+import GenerativeNetwork from '../components/interactive/GenerativeNetwork.astro';
+import { siteConfig } from '../config/site';
+import { isPublishedPost, sortPostsDesc } from '../utils/routing';
+
+const allPublished = sortPostsDesc((await getCollection('blog')).filter(isPublishedPost));
+const topAnalyticsSlugs = [
+  'test-time-training-dynamic-adaptation',
+  'the-recursion-turns-on-itself-autoresearch',
+  'the-most-expensive-question-in-ml',
+  'fuzzy-matching-in-python',
+  'jacobian-lens',
+  'power-bi-arch-not-macos',
+];
+const featuredPosts = allPublished.filter((p) => p.data.featured);
+const popularPosts = topAnalyticsSlugs
+  .map((s) => allPublished.find((p) => p.id.endsWith(s) || p.id.includes(s)))
+  .filter((p): p is (typeof allPublished)[number] => Boolean(p));
+const showcaseSeen = new Set<string>();
+const showcasePosts = [...featuredPosts, ...popularPosts, ...allPublished]
+  .filter((p) => {
+    if (showcaseSeen.has(p.id)) return false;
+    showcaseSeen.add(p.id);
+    return true;
+  })
+  .slice(0, 6);
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const labExperiments = (await getCollection('lab')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout title={siteConfig.title} description={siteConfig.description}>
+  <!-- Hero -->
+  <section class="container hero-section">
+    <div class="hero-grid">
+      <div class="hero-copy fade-settle">
+        <div class="section-kicker">Generative AI · Quantitative Modeling · Decision Systems</div>
+        <h1 class="hero-headline">{siteConfig.tagline}</h1>
+        <p class="hero-sub">
+          <strong>Victor Angelo Blancada</strong> — Head of AI &amp; Quantitative Modeling with <span data-years-experience={siteConfig.careerStartYear}>{siteConfig.yearsExperience}+</span> years delivering production Generative AI, optimization, and decision platforms. Global Head of Supply Chain Analytics at <strong>A.P. Moller–Maersk</strong>.
+        </p>
+        <div class="hero-actions">
+          <a href="/projects/" class="btn btn-primary">Selected Work</a>
+          <a href="/blog/" class="btn">Writing ({allPublished.length})</a>
+          <a href="/pages/about.html" class="btn">About &amp; Background</a>
+          <a href="/pages/resume-downloads.html" class="btn">Résumé &amp; CV</a>
+        </div>
+        <dl class="hero-metrics" aria-label="Core credentials">
+          <div>
+            <dt class="mono-meta">Experience</dt>
+            <dd><span data-years-experience={siteConfig.careerStartYear}>{siteConfig.yearsExperience}+</span> Years AI &amp; OR</dd>
+          </div>
+          <div>
+            <dt class="mono-meta">Education</dt>
+            <dd>UP Diliman (3.95 US GPA eq.) · MIT CTL</dd>
+          </div>
+          <div>
+            <dt class="mono-meta">Recognition</dt>
+            <dd>Abakcus · SCMP · 98th %ile BAT</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="hero-visual" data-identity="laboratory">
+        <GenerativeNetwork mode="hero" />
+        <div class="hero-visual-caption mono-meta">
+          <span>FIG. 00 // INTERACTIVE PROXIMITY TOPOLOGY</span>
+          <a href="/lab/generative-network-topology/">Open in Lab →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Selected Work -->
+  <section class="section" aria-labelledby="selected-work-heading">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-kicker">01 // Selected Work</span>
+          <h2 id="selected-work-heading" class="section-title">
+            Production Systems &amp; Case Studies
+          </h2>
+        </div>
+        <a href="/projects/" class="mono-meta">All {projects.length} case studies →</a>
+      </div>
+
+      <div class="hairline-grid work-grid">
+        {
+          projects.map((proj, idx) => (
+            <a href={`/projects/${proj.id}/`} class="hairline-cell work-row">
+              <div class="work-row-top mono-meta">
+                <span>0{idx + 1}</span>
+                <span>{proj.data.organization}</span>
+                <span class="work-status">{proj.data.status}</span>
+              </div>
+              <h3 class="work-title">{proj.data.title}</h3>
+              <p class="work-desc">{proj.data.description}</p>
+              <div class="work-row-foot">
+                {proj.data.impactMetric && (
+                  <span class="impact-pill mono-meta">{proj.data.impactMetric}</span>
+                )}
+                <span class="mono-meta work-stack">
+                  {proj.data.technologies.slice(0, 3).join(' · ')}
+                </span>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Writing -->
+  <section class="section" aria-labelledby="featured-writing-heading">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-kicker">02 // Technical Publication</span>
+          <h2 id="featured-writing-heading" class="section-title">
+            Featured &amp; Recent Writing
+          </h2>
+        </div>
+        <div class="header-sub-links mono-meta">
+          <a href="/blog/">Card Archive</a>
+          <span>·</span>
+          <a href="/blog.html">Chronological Index</a>
+        </div>
+      </div>
+
+      <div class="hairline-grid writing-grid">
+        {showcasePosts.map((post) => <PostCard post={post} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Laboratory -->
+  <section class="section" aria-labelledby="laboratory-heading">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-kicker">03 // Interactive Laboratory</span>
+          <h2 id="laboratory-heading" class="section-title">
+            Simulations &amp; Explorable Explanations
+          </h2>
+        </div>
+        <a href="/lab/" class="mono-meta">Enter Laboratory →</a>
+      </div>
+
+      <div class="hairline-grid lab-grid">
+        {
+          labExperiments.map((exp) => (
+            <a href={`/lab/${exp.id}/`} class="hairline-cell lab-card">
+              <div class="mono-meta lab-card-meta">
+                <span>Experiment</span>
+                <span>·</span>
+                <span>{exp.data.technologies.join(' · ')}</span>
+              </div>
+              <h3 class="lab-card-title">{exp.data.title}</h3>
+              <p class="lab-card-desc">{exp.data.description}</p>
+              <span class="mono-meta lab-cta">Launch interactive module →</span>
+            </a>
+          ))
+        }
+        <a
+          href="/blog/2026/07/28/the-most-expensive-question-in-ml.html"
+          class="hairline-cell lab-card"
+        >
+          <div class="mono-meta lab-card-meta">
+            <span>Embedded Article Tool</span>
+            <span>·</span>
+            <span>Scaling Laws</span>
+          </div>
+          <h3 class="lab-card-title">Lifecycle Compute Optimizer</h3>
+          <p class="lab-card-desc">
+            Compare Kaplan, Chinchilla, and Amortized Inference parameter allocations across training FLOPs and lifetime query volume.
+          </p>
+          <span class="mono-meta lab-cta">Explore inside essay →</span>
+        </a>
+        <a
+          href="/blog/2021/01/31/percentage-calculator.html"
+          class="hairline-cell lab-card"
+        >
+          <div class="mono-meta lab-card-meta">
+            <span>Embedded Article Tool</span>
+            <span>·</span>
+            <span>Numerical Utility</span>
+          </div>
+          <h3 class="lab-card-title">Asymmetric Percentage Comparator</h3>
+          <p class="lab-card-desc">
+            Interactive utility comparing proportional ratios and asymmetric percentage changes between two numeric inputs.
+          </p>
+          <span class="mono-meta lab-cta">Open calculator →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About & Contact -->
+  <section class="section" aria-labelledby="about-heading">
+    <div class="container about-contact-grid">
+      <div>
+        <span class="section-kicker">04 // Background</span>
+        <h2 id="about-heading" class="section-title">Decision Systems, Research &amp; Engineering Leadership</h2>
+        <p class="about-body">
+          Over <span data-years-experience={siteConfig.careerStartYear}>{siteConfig.yearsExperience}+</span> years building applied AI and operations research systems, I have led analytics transformations from strategy consulting at Mitchell Madison Group (US$400M telecom network expansion on SQL Server and Neo4j; US$9M / 12% North American manufacturing sourcing savings), APAC portfolio optimization at IPG Mediabrands (Bayesian MCMC media mix modeling and a custom optimizer lifting client sales up to 13%), and Greater China analytics at Publicis Worldwide (scaling AXA's chatbot volume by 73%) to global supply chain AI platforms at LF Logistics and A.P. Moller–Maersk—delivering the Mimir Generative AI agent (cutting RFP turnaround from weeks to hours), the Groveport Digital Twin, and a 125+ site greenhouse gas reporting platform.
+        </p>
+        <p class="about-body">
+          I hold a B.S. in Industrial Engineering (<em>summa cum laude</em>, 3.95 US GPA equivalent, Oblation Scholar, two-time National Operations Research Quiz Champion) from the University of the Philippines Diliman, completed MIT CTL Executive Training in Supply Chain &amp; Logistics AI/ML, scored in the 98th percentile on the Global Bloomberg Aptitude Test, and actively develop an independent structured-note pricing platform. My technical writing has been recognized by <a href={siteConfig.author.abakcusUrl} target="_blank" rel="noopener noreferrer">Abakcus.com</a> among notable mathematics blogs, alongside data analysis published in the <em>South China Morning Post</em>.
+        </p>
+        <div class="about-links">
+          <a href="/pages/about.html" class="btn">Full Biography &amp; Experience</a>
+          <a href="/pages/data-scientist.html" class="btn">Data Scientist</a>
+          <a href="/pages/ai-developer.html" class="btn">AI Developer</a>
+          <a href="/pages/strategy-consultant.html" class="btn">Strategy Consultant</a>
+        </div>
+      </div>
+
+      <aside class="contact-panel" aria-labelledby="contact-heading">
+        <span class="section-kicker">05 // Connect</span>
+        <h2 id="contact-heading" class="contact-title">Reach Out</h2>
+        <ul class="contact-list">
+          <li>
+            <span class="mono-meta">LinkedIn</span>
+            <a href={siteConfig.author.linkedinUrl} target="_blank" rel="noopener noreferrer">
+              linkedin.com/in/geloblancada ↗
+            </a>
+          </li>
+          <li>
+            <span class="mono-meta">GitHub</span>
+            <a href={siteConfig.author.githubUrl} target="_blank" rel="noopener noreferrer">
+              github.com/victorangeloblancada ↗
+            </a>
+          </li>
+          <li>
+            <span class="mono-meta">Email</span>
+            <a href={`mailto:${siteConfig.author.email}`}>{siteConfig.author.email}</a>
+          </li>
+          <li>
+            <span class="mono-meta">RSS / Atom</span>
+            <a href="/feed.xml">/feed.xml</a>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero-section {
+    padding-block: clamp(2.25rem, 5vw, 4.5rem);
+  }
+
+  .hero-grid {
+    display: grid;
+    gap: 2rem;
+    align-items: stretch;
+  }
+
+  @media (min-width: 960px) {
+    .hero-grid {
+      grid-template-columns: 1.25fr 0.95fr;
+      gap: 2.5rem;
+    }
+  }
+
+  .hero-headline {
+    margin: 0.65rem 0 1.15rem;
+    font-family: var(--font-editorial);
+    font-size: var(--text-hero);
+    font-weight: 300;
+    letter-spacing: -0.015em;
+    line-height: 1.08;
+  }
+
+  .hero-sub {
+    font-size: clamp(1rem, 0.96rem + 0.25vw, 1.12rem);
+    color: var(--ink-secondary);
+    max-width: 58ch;
+    margin: 0 0 1.5rem;
+    line-height: 1.65;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .hero-metrics {
+    margin: 1.6rem 0 0;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--border-subtle);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.85rem 1.25rem;
+  }
+
+  .hero-metrics dt {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .hero-metrics dd {
+    margin: 0.18rem 0 0;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--ink-heading);
+  }
+
+  .hero-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    min-height: 290px;
+    padding: 0.75rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-canvas);
+  }
+
+  .hero-visual-caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-visual-caption a {
+    text-decoration: none;
+  }
+
+  .work-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .work-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .work-row-top {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .work-status {
+    margin-left: auto;
+    padding: 0.08rem 0.45rem;
+    border-radius: 3px;
+    border: 1px solid var(--border-strong);
+    text-transform: uppercase;
+    font-size: 0.66rem;
+  }
+
+  .work-title {
+    margin: 0;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+    color: var(--ink-primary);
+  }
+
+  .work-row:hover .work-title {
+    color: var(--accent);
+  }
+
+  .work-desc {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    line-height: 1.55;
+  }
+
+  .work-row-foot {
+    margin-top: auto;
+    padding-top: 0.6rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+  }
+
+  .impact-pill {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .writing-grid {
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  }
+
+  .header-sub-links {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .lab-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+
+  .lab-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .lab-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .lab-card-title {
+    margin: 0;
+    font-size: 1.12rem;
+    color: var(--ink-primary);
+  }
+
+  .lab-card:hover .lab-card-title {
+    color: var(--accent);
+  }
+
+  .lab-card-desc {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    line-height: 1.55;
+  }
+
+  .lab-cta {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    color: var(--accent);
+  }
+
+  .about-contact-grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 880px) {
+    .about-contact-grid {
+      grid-template-columns: 1.4fr 0.9fr;
+      align-items: start;
+    }
+  }
+
+  .about-body {
+    color: var(--ink-secondary);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    line-height: 1.72;
+    max-width: 66ch;
+  }
+
+  .about-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-top: 1.35rem;
+  }
+
+  .contact-panel {
+    padding: 1.4rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+  }
+
+  .contact-title {
+    margin: 0.4rem 0 1rem;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-xl);
+    letter-spacing: -0.015em;
+  }
+
+  .contact-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .contact-list li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .contact-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .contact-list a {
+    font-size: var(--text-sm);
+    text-decoration: none;
+    word-break: break-all;
+  }
+
+  .contact-list a:hover {
+    text-decoration: underline;
+  }
+</style>

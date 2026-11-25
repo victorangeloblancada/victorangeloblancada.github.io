@@ -1,0 +1,146 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/editorial/PostCard.astro';
+import { siteConfig } from '../../config/site';
+import {
+  getPostDateParts,
+  isPublishedPost,
+  sortPostsDesc,
+} from '../../utils/routing';
+import { normalizeTagSlug } from '../../utils/tags';
+
+const allPublished = sortPostsDesc((await getCollection('blog')).filter(isPublishedPost));
+const pageSize = siteConfig.pagination.postsPerPage;
+const totalPages = Math.ceil(allPublished.length / pageSize);
+const pagePosts = allPublished.slice(0, pageSize);
+
+const years = Array.from(
+  new Set(allPublished.map((p) => getPostDateParts(p.data.date).year)),
+).sort((a, b) => Number(b) - Number(a));
+
+const tagCounts = new Map<string, number>();
+for (const post of allPublished) {
+  for (const raw of post.data.tags) {
+    const slug = normalizeTagSlug(raw);
+    tagCounts.set(slug, (tagCounts.get(slug) ?? 0) + 1);
+  }
+}
+const topTags = Array.from(tagCounts.entries())
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+  .slice(0, 18);
+---
+
+<BaseLayout
+  title="Writing Archive"
+  description="Essays, technical notes, and tutorials on machine learning, AI engineering, operations research, and software architecture."
+>
+  <section class="container archive-shell">
+    <header class="archive-header fade-settle">
+      <div class="section-kicker">Technical Publication · {allPublished.length} Articles</div>
+      <h1 class="archive-title">Writing</h1>
+      <p class="archive-lead">
+        Long-form essays, engineering deep dives, mathematical explorations, and historical tutorials published between {years[years.length - 1]} and {years[0]}.
+      </p>
+
+      <div class="filter-bar">
+        <div class="filter-group">
+          <span class="mono-meta">Years:</span>
+          <ul class="tag-list">
+            {
+              years.map((y) => (
+                <li>
+                  <a href={`/blog/year/${y}/`} class="tag-chip">{y}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="filter-group">
+          <span class="mono-meta">Popular topics:</span>
+          <ul class="tag-list">
+            {
+              topTags.map(([slug, count]) => (
+                <li>
+                  <a href={`/blog/tag/${slug}/`} class="tag-chip">
+                    {slug} ({count})
+                  </a>
+                </li>
+              ))
+            }
+            <li>
+              <a href="/blog.html" class="tag-chip">All tags →</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <div class="hairline-grid archive-grid">
+      {pagePosts.map((post) => <PostCard post={post} level={2} />)}
+    </div>
+
+    {
+      totalPages > 1 && (
+        <nav class="pagination-bar" aria-label="Blog pagination">
+          <span class="mono-meta">
+            Page 1 of {totalPages}
+          </span>
+          <div class="pagination-links">
+            <a href="/blog/page/2/" class="btn">Older articles →</a>
+          </div>
+        </nav>
+      )
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .archive-shell {
+    padding-block: clamp(2rem, 4vw, 3.5rem) clamp(3rem, 5vw, 5rem);
+  }
+
+  .archive-header {
+    margin-bottom: 2rem;
+  }
+
+  .archive-title {
+    margin: 0.4rem 0 0.75rem;
+    font-size: var(--text-3xl);
+    letter-spacing: -0.03em;
+  }
+
+  .archive-lead {
+    color: var(--ink-secondary);
+    max-width: 64ch;
+    margin: 0 0 1.5rem;
+  }
+
+  .filter-bar {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+  }
+
+  .filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .archive-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+
+  .pagination-bar {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+</style>

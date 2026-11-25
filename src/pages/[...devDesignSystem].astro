@@ -1,0 +1,159 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Code } from 'astro:components';
+
+export function getStaticPaths() {
+  if (!import.meta.env.DEV) return [];
+  return [{ params: { devDesignSystem: 'design-system' } }];
+}
+
+const sampleCode = `from thefuzz import process
+
+candidates = ["Singapore Hub", "Groveport Digital Twin", "Mimir RFP Agent"]
+match, score = process.extractOne("mimir agent", candidates)
+print(f"{match} ({score}%)")`;
+---
+
+<BaseLayout
+  title="Design System Preview (Dev Only)"
+  description="Internal development comparison of Editorial and Laboratory visual identities."
+  noindex={true}
+>
+  <section class="container ds-shell">
+    <header class="ds-header">
+      <div class="section-kicker">Development Only · Not Emitted in Production</div>
+      <h1>Editorial &amp; Laboratory Design System Preview</h1>
+      <p class="ds-lead">
+        Side-by-side validation of Newsreader (300/400/500/600), JetBrains Mono (400/500), links, forms, code presentation, and contrast across both light and dark identities.
+      </p>
+    </header>
+
+    <div class="ds-compare">
+      <section class="ds-panel" data-identity="editorial" aria-labelledby="ds-editorial-title">
+        <div class="ds-badge mono-meta">data-identity="editorial" (Default)</div>
+        <h2 id="ds-editorial-title" class="ds-display">Newsreader 300 Display Headline</h2>
+        <p class="ds-prose">
+          Long-form editorial prose uses <strong>Newsreader 400</strong> with <strong>strong emphasis (600)</strong>, generous 1.72 line-height, and restrained <a href="#ds-editorial-title">grey-green inline links</a>.
+        </p>
+        <div class="ds-meta-row mono-meta">
+          <span>2026-11-25</span>
+          <span>·</span>
+          <span>6 min read</span>
+          <span>·</span>
+          <span class="tag-chip">optimization</span>
+        </div>
+        <div class="ds-actions">
+          <button type="button" class="btn btn-primary">Primary Action</button>
+          <button type="button" class="btn">Secondary Action</button>
+        </div>
+        <div class="prose ds-code-sample">
+          <Code code={sampleCode} lang="python" themes={{ light: 'github-light-default', dark: 'github-dark-default' }} />
+        </div>
+      </section>
+
+      <section class="ds-panel" data-identity="laboratory" aria-labelledby="ds-lab-title">
+        <div class="ds-badge mono-meta">data-identity="laboratory" (R4 / Lab)</div>
+        <h2 id="ds-lab-title" class="ds-display">Interactive Laboratory Surface</h2>
+        <p class="ds-prose">
+          Experimental modules pair deep maritime surfaces with <a href="#ds-lab-title">cyan-slate interactive links</a>, terracotta control highlights, and tabular monospace telemetry.
+        </p>
+        <div class="ds-meta-row mono-meta">
+          <span>FIG. 02</span>
+          <span>·</span>
+          <span>EDGES: 78</span>
+          <span>·</span>
+          <span class="tag-chip">generative-ai</span>
+        </div>
+        <div class="ds-actions">
+          <button type="button" class="btn btn-primary">Run Simulation</button>
+          <input type="range" min="0" max="100" value="64" aria-label="Sample simulation parameter" />
+        </div>
+        <figure class="ds-mini-chart">
+          <svg viewBox="0 0 320 90" width="320" height="90" role="img" aria-label="Sample convergence curve">
+            <polyline fill="none" stroke="var(--viz-1)" stroke-width="2" points="10,72 65,42 120,28 190,19 260,15 310,14" />
+            <polyline fill="none" stroke="var(--viz-2)" stroke-width="2" stroke-dasharray="4 3" points="10,76 65,60 120,44 190,32 260,26 310,23" />
+          </svg>
+        </figure>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ds-shell {
+    padding-block: 2.5rem 4rem;
+  }
+
+  .ds-header {
+    margin-bottom: 2rem;
+    max-width: 68ch;
+  }
+
+  .ds-header h1 {
+    margin: 0.45rem 0 0.75rem;
+    font-size: var(--text-3xl);
+    font-weight: 300;
+  }
+
+  .ds-lead {
+    color: var(--ink-muted);
+    margin: 0;
+  }
+
+  .ds-compare {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 920px) {
+    .ds-compare {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .ds-panel {
+    padding: 1.5rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-canvas);
+    color: var(--ink-primary);
+    display: grid;
+    gap: 1rem;
+  }
+
+  .ds-badge {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .ds-display {
+    margin: 0;
+    font-family: var(--font-editorial);
+    font-weight: 300;
+    font-size: var(--text-2xl);
+    color: var(--ink-heading);
+    line-height: 1.12;
+  }
+
+  .ds-prose {
+    margin: 0;
+    line-height: 1.72;
+  }
+
+  .ds-meta-row,
+  .ds-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .ds-mini-chart {
+    margin: 0;
+    padding: 0.75rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+  }
+</style>

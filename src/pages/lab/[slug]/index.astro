@@ -1,0 +1,26 @@
+---
+import { getCollection, render } from 'astro:content';
+import LabLayout from '../../../layouts/LabLayout.astro';
+import ClusteringExplorer from '../../../components/interactive/ClusteringExplorer.astro';
+import GenerativeNetwork from '../../../components/interactive/GenerativeNetwork.astro';
+import 'katex/dist/katex.min.css';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('lab');
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<LabLayout entry={entry}>
+  <Fragment slot="demo">
+    {entry.data.componentId === 'clustering-explorer' && <ClusteringExplorer />}
+    {entry.data.componentId === 'generative-network' && <GenerativeNetwork mode="lab" />}
+  </Fragment>
+  <Content />
+</LabLayout>

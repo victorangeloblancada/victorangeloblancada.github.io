@@ -1,0 +1,98 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import { normalizeTagSlug } from '../utils/tags';
+import '../styles/prose.css';
+
+export interface Props {
+  entry: CollectionEntry<'lab'>;
+}
+
+const { entry } = Astro.props;
+const { title, description, date, tags, technologies, status } = entry.data;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  type="article"
+  publishedTime={date.toISOString()}
+  tags={tags}
+  pagefindIndex={true}
+  identity="laboratory"
+>
+  <article class="container lab-shell">
+    <span class="sr-only" data-pagefind-filter="type">lab</span>
+    <span class="sr-only" data-pagefind-filter="category">laboratory</span>
+    {tags.map((tag) => <span class="sr-only" data-pagefind-filter="tag">{normalizeTagSlug(tag)}</span>)}
+    <span class="sr-only" data-pagefind-meta="date">{date.toISOString().slice(0, 10)}</span>
+
+    <header class="lab-header fade-settle">
+      <div class="mono-meta lab-crumb">
+        <a href="/lab/">Laboratory</a>
+        <span>/</span>
+        <span>{status}</span>
+        <span>·</span>
+        <span>{technologies.join(' · ')}</span>
+      </div>
+      <h1 class="lab-title" data-pagefind-meta="title">{title}</h1>
+      <p class="lab-desc">{description}</p>
+    </header>
+
+    <div class="lab-stage">
+      <slot name="demo" />
+    </div>
+
+    <div class="prose lab-notes">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .lab-shell {
+    padding-block: clamp(2rem, 4vw, 3.5rem) clamp(3rem, 5vw, 5rem);
+  }
+
+  .lab-header {
+    margin-bottom: 1.75rem;
+  }
+
+  .lab-crumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .lab-crumb a {
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+
+  .lab-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+  }
+
+  .lab-desc {
+    margin: 0.75rem 0 0;
+    font-size: 1.05rem;
+    color: var(--ink-secondary);
+    max-width: 66ch;
+  }
+
+  .lab-stage {
+    margin-bottom: 2.5rem;
+  }
+
+  .lab-notes {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+</style>

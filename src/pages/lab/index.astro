@@ -1,0 +1,136 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const experiments = (await getCollection('lab')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout
+  title="Laboratory — Interactive Experiments"
+  description="Interactive machine learning demonstrations, creative coding experiments, and mathematical explorations built with Canvas, SVG, and D3.js."
+  identity="laboratory"
+>
+  <section class="container lab-index-shell">
+    <header class="lab-index-header fade-settle">
+      <div class="section-kicker">Research &amp; Creative Coding · {experiments.length} Modules</div>
+      <h1 class="lab-index-title">Laboratory</h1>
+      <p class="lab-index-lead">
+        Browser-based visualizations and algorithm playgrounds designed to make mathematical behavior tangible—each progressively enhanced with zero global framework bloat.
+      </p>
+    </header>
+
+    <div class="hairline-grid lab-index-grid">
+      {
+        experiments.map((exp) => (
+          <a href={`/lab/${exp.id}/`} class="hairline-cell lab-item">
+            <div class="mono-meta lab-item-meta">
+              <span>{exp.data.status}</span>
+              <span>·</span>
+              <span>{exp.data.technologies.join(' · ')}</span>
+            </div>
+            <h2 class="lab-item-title">{exp.data.title}</h2>
+            <p class="lab-item-desc">{exp.data.description}</p>
+            <span class="mono-meta lab-item-cta">Open interactive lab →</span>
+          </a>
+        ))
+      }
+
+      <a
+        href="/blog/2026/07/28/the-most-expensive-question-in-ml.html#interactive-scaling-law-calculator"
+        class="hairline-cell lab-item"
+      >
+        <div class="mono-meta lab-item-meta">
+          <span>Article Embedded</span>
+          <span>·</span>
+          <span>JavaScript</span>
+        </div>
+        <h2 class="lab-item-title">Lifecycle Compute Optimizer</h2>
+        <p class="lab-item-desc">
+          Interactive trade-off calculator comparing Kaplan, Chinchilla, and Amortized Inference parameter/token allocations.
+        </p>
+        <span class="mono-meta lab-item-cta">Inspect inside essay →</span>
+      </a>
+
+      <a
+        href="/blog/2021/01/31/percentage-calculator.html"
+        class="hairline-cell lab-item"
+      >
+        <div class="mono-meta lab-item-meta">
+          <span>Article Embedded</span>
+          <span>·</span>
+          <span>JavaScript</span>
+        </div>
+        <h2 class="lab-item-title">Percentage Relationship Calculator</h2>
+        <p class="lab-item-desc">
+          Historical interactive calculator contrasting proportional shares and asymmetric percent changes.
+        </p>
+        <span class="mono-meta lab-item-cta">Inspect inside essay →</span>
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lab-index-shell {
+    padding-block: clamp(2rem, 4vw, 3.5rem) clamp(3rem, 5vw, 5rem);
+  }
+
+  .lab-index-header {
+    margin-bottom: 2rem;
+  }
+
+  .lab-index-title {
+    margin: 0.4rem 0 0.65rem;
+    font-size: var(--text-3xl);
+    letter-spacing: -0.03em;
+  }
+
+  .lab-index-lead {
+    color: var(--ink-secondary);
+    max-width: 64ch;
+    margin: 0;
+  }
+
+  .lab-index-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .lab-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .lab-item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .lab-item-title {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--ink-primary);
+  }
+
+  .lab-item:hover .lab-item-title {
+    color: var(--accent);
+  }
+
+  .lab-item-desc {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    line-height: 1.55;
+  }
+
+  .lab-item-cta {
+    margin-top: auto;
+    padding-top: 0.6rem;
+    color: var(--accent);
+  }
+</style>

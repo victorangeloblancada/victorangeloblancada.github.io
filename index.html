@@ -1,0 +1,83 @@
+---
+title: Hi, I'm Victor Angelo Blancada
+header: Victor Angelo Blancada Creates Value From Data
+layout: post
+image: /assets/images/space-lights.jpg
+notshareable: True
+---
+<div class="text-center">
+	<h1 class="large quote">Hi, I'm</h1>
+	<h1 class="large quote emphasized">Victor Angelo Blancada</h1>
+</div>
+
+<div class="flex-container">
+	{% for item in site.data.profile %}
+		<a href="{{ item.url }}">
+			<div class="square-img transition" {% if item.featured-img %} style="background-image: linear-gradient(rgba(0,0,0,.1), rgba(0,0,0,.1)), url( {{ item.featured-img }} );" {% endif %} >
+				<div class="center-content">
+					<span class="on-bg">
+						<h2>{{ item.header }}</h2>
+					</span>
+				</div>
+			</div>
+		</a>
+	{% endfor %}
+</div>
+
+<div class="text-center">
+	<p>Learn more by downloading my <a href="/pages/resume-downloads.html">résumé</a> or connecting on <a href="https://www.linkedin.com/in/geloblancada/">LinkedIn</a>.</p>
+</div>
+
+<div class="text-center">
+	<h1 class="quote" style="font-size: 10vmin; line-height: 11vmin;">Here are some of the things I have done...</h1>
+</div>
+
+<div class="content">
+	<div class="article">
+		<ul>
+			<li>Designed and deployed <b>Mimir</b>, a production Generative AI agent (LLM + RAG + tool calling) that automates global RFP reviews and cuts response times from days to hours across Maersk Contract Logistics worldwide.</li>
+			<li>Co-led the <b>Digital Twin & Warehouse AI</b> project at Maersk's 1.2M sq ft Groveport distribution center: incorporating 3D photogrammetry, AnyLogic/FlexSim simulation, AWS QuickSight dashboards, and ML-based wave/task optimization.</li>
+			<li>Architected a global facility-level GHG emissions reporting platform across 125+ Maersk Contract Logistics sites worldwide, routing transit data into a central data lake for customer-level emissions visibility.</li>
+			<li>Developed the <b>SCA Toolbox</b>, a containerized self-service Python web application providing geocoding, Center of Gravity analysis, and Traveling Salesman optimization directly to country-level design teams.</li>
+			<li>Directed the $400MM USD network expansion of a North American telecommunications carrier by running predictive big data customer-lifetime-value simulations and graph optimization models to guide last-mile investments.</li>
+			<li>Generated client sales lift of up to 13% by engineering a custom media portfolio optimization algorithm deployed across Asia-Pacific for Fortune 500 brands including Johnson & Johnson and Coca-Cola.</li>
+			<li>Developed an automated flu-tracker based on weather and search engine trends to optimize marketing and inventory schedules across Asia-Pacific.</li>
+			<li>Successfully predicted the winning candidate in the 2016 Philippine national elections months ahead of traditional polls using custom econometric modeling.</li> 
+			<li>Improved user interactions in a chatbot app for a multinational insurance company using NLP-driven insights, resulting in a 73% increase in active users.</li>
+			<li>Spearheaded the data science and data engineering aspect of an analysis of social media user behavior over the Chinese New Year, published in the <a href="https://www.scmp.com/magazines/post-magazine/article/2135277/instagram-reveals-hong-kongs-chinese-new-year-winners-and" target="_blank">South China Morning Post.</a></li>
+			<li>Developed an SKU-level demand prediction system utilizing K-Shape clustering for Nike to optimize seasonal inventory planning.</li>
+			<li>Developed the data science platform for a supply chain management company's costing center of excellence, providing merchandisers with insights for vendor negotiation and strategic sourcing.</li>
+			<li>Applied operations research techniques to consolidate and optimize the brand-level supply chains of a leading Asian food and beverage conglomerate.</li>
+			<li>This site has been named <a href="https://abakcus.com/directory/victor-angelo-blancadas-blog/" target="_blank">one of the best mathematics blogs on the Internet by Abakcus.com.</a></li>
+		</ul>
+	</div>
+</div>			
+
+<div class="text-center">
+	<p>Learn more by downloading my <a href="/pages/resume-downloads.html">résumé</a> or connecting on <a href="https://www.linkedin.com/in/geloblancada/">LinkedIn</a>.</p>
+</div>
+
+<div class="text-center">
+	<h1 class="quote" style="font-size: 10vmin; line-height: 11vmin;">Featured Blog Posts</h1>
+</div>
+<h1></h1>
+
+<div class="flex-container">
+	{% for post in site.posts %}
+		{% if post.tags contains 'featured' %}
+			<a href="{{ post.url }}">
+				<div class="square-img transition" {% if post.image %} style="background-image: linear-gradient(rgba(0,0,0,.1), rgba(0,0,0,.1)), url( {{ post.image }} );" {% endif %} >
+					<div class="center-content">
+						<span class="on-bg">
+							<h3>{% if post.header %} {{ post.header }} {% else %} {{ post.title }} {% endif %}</h3>
+						</span>
+					</div>
+				</div>
+			</a>
+		{% endif %}
+	{% endfor %}
+</div>
+
+<div class="text-center">
+	<h1 class="quote" style="font-size: 10vmin; line-height: 11vmin;">Reach out to me on <a href="https://www.linkedin.com/in/geloblancada/" style="text-decoration: none;">LinkedIn</a> or via <a href="mailto:naturalproblemsolver@gmail.com" style="text-decoration: none;">Email</a></h1>
+</div>	

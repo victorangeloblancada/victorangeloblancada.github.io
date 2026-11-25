@@ -1,0 +1,85 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import PostCard from '../../../../components/editorial/PostCard.astro';
+import {
+  getPostDateParts,
+  isPublishedPost,
+  sortPostsDesc,
+} from '../../../../utils/routing';
+
+export async function getStaticPaths() {
+  const allPublished = sortPostsDesc((await getCollection('blog')).filter(isPublishedPost));
+  const years = Array.from(
+    new Set(allPublished.map((p) => getPostDateParts(p.data.date).year)),
+  ).sort((a, b) => Number(b) - Number(a));
+
+  return years.map((year) => ({
+    params: { year },
+    props: {
+      year,
+      allYears: years,
+      posts: allPublished.filter((p) => getPostDateParts(p.data.date).year === year),
+    },
+  }));
+}
+
+const { year, allYears, posts } = Astro.props;
+---
+
+<BaseLayout
+  title={`Articles from ${year}`}
+  description={`Archive of technical articles published in ${year}.`}
+>
+  <section class="container archive-shell">
+    <header class="archive-header">
+      <div class="section-kicker">Year Archive · {posts.length} Articles</div>
+      <h1 class="archive-title">{year}</h1>
+      <ul class="tag-list year-pills">
+        {
+          allYears.map((y) => (
+            <li>
+              <a
+                href={`/blog/year/${y}/`}
+                class:list={['tag-chip', { 'active-year': y === year }]}
+              >
+                {y}
+              </a>
+            </li>
+          ))
+        }
+        <li><a href="/blog/" class="tag-chip">All years</a></li>
+      </ul>
+    </header>
+
+    <div class="hairline-grid archive-grid">
+      {posts.map((post) => <PostCard post={post} level={2} />)}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .archive-shell {
+    padding-block: clamp(2rem, 4vw, 3.5rem) clamp(3rem, 5vw, 5rem);
+  }
+
+  .archive-header {
+    margin-bottom: 2rem;
+  }
+
+  .archive-title {
+    margin: 0.4rem 0 1rem;
+    font-size: var(--text-3xl);
+    letter-spacing: -0.03em;
+  }
+
+  .active-year {
+    border-color: var(--accent-border);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .archive-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+</style>

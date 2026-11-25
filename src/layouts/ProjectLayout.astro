@@ -1,0 +1,195 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import { normalizeTagSlug } from '../utils/tags';
+import '../styles/prose.css';
+
+export interface Props {
+  entry: CollectionEntry<'projects'>;
+}
+
+const { entry } = Astro.props;
+const {
+  title,
+  description,
+  date,
+  period,
+  role,
+  organization,
+  technologies,
+  featuredImage,
+  status,
+  impactMetric,
+  externalUrl,
+  githubUrl,
+  categories,
+  tags,
+} = entry.data;
+
+const projectCategories = (categories.length ? categories : ['case-study']).map(normalizeTagSlug);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={featuredImage}
+  type="article"
+  publishedTime={date.toISOString()}
+  tags={tags}
+  pagefindIndex={true}
+>
+  <article class="container project-shell">
+    <span class="sr-only" data-pagefind-filter="type">project</span>
+    {
+      projectCategories.map((cat) => (
+        <span class="sr-only" data-pagefind-filter="category">{cat}</span>
+      ))
+    }
+    {tags.map((tag) => <span class="sr-only" data-pagefind-filter="tag">{normalizeTagSlug(tag)}</span>)}
+    <span class="sr-only" data-pagefind-meta="date">{date.toISOString().slice(0, 10)}</span>
+
+    <header class="project-header fade-settle">
+      <div class="mono-meta project-crumb">
+        <a href="/projects/">Selected Work</a>
+        <span>/</span>
+        <span class="status-pill">{status}</span>
+        {period && <span>· {period}</span>}
+      </div>
+
+      <h1 class="project-title" data-pagefind-meta="title">{title}</h1>
+      <p class="project-desc">{description}</p>
+
+      <div class="hairline-grid project-spec-grid">
+        {
+          organization && (
+            <div class="hairline-cell spec-cell">
+              <div class="mono-meta">Organization</div>
+              <div class="spec-val">{organization}</div>
+            </div>
+          )
+        }
+        {
+          role && (
+            <div class="hairline-cell spec-cell">
+              <div class="mono-meta">Role</div>
+              <div class="spec-val">{role}</div>
+            </div>
+          )
+        }
+        {
+          impactMetric && (
+            <div class="hairline-cell spec-cell">
+              <div class="mono-meta">Measured Outcome</div>
+              <div class="spec-val accent-val">{impactMetric}</div>
+            </div>
+          )
+        }
+        <div class="hairline-cell spec-cell">
+          <div class="mono-meta">Stack</div>
+          <div class="spec-val">{technologies.join(' · ')}</div>
+        </div>
+      </div>
+
+      {
+        (externalUrl || githubUrl) && (
+          <div class="project-links">
+            {externalUrl && (
+              <a href={externalUrl} class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                External Link ↗
+              </a>
+            )}
+            {githubUrl && (
+              <a href={githubUrl} class="btn" target="_blank" rel="noopener noreferrer">
+                GitHub Repository ↗
+              </a>
+            )}
+          </div>
+        )
+      }
+    </header>
+
+    <div class="prose project-prose">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .project-shell {
+    padding-block: clamp(2rem, 4vw, 3.5rem) clamp(3rem, 5vw, 5rem);
+  }
+
+  .project-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .project-crumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .project-crumb a {
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+
+  .status-pill {
+    padding: 0.1rem 0.45rem;
+    border-radius: 3px;
+    border: 1px solid var(--accent-border);
+    background: var(--accent-soft);
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .project-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+    max-width: 24ch;
+  }
+
+  .project-desc {
+    margin: 0.85rem 0 1.75rem;
+    font-size: 1.1rem;
+    color: var(--ink-secondary);
+    max-width: 68ch;
+  }
+
+  .project-spec-grid {
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  }
+
+  .spec-cell {
+    padding: 0.9rem 1.1rem;
+  }
+
+  .spec-val {
+    margin-top: 0.3rem;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--ink-primary);
+  }
+
+  .accent-val {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .project-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 1.25rem;
+  }
+
+  .project-prose {
+    margin-top: 2rem;
+  }
+</style>

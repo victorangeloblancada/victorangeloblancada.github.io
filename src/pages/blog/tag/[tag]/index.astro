@@ -1,0 +1,132 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import PostCard from '../../../../components/editorial/PostCard.astro';
+import { siteConfig } from '../../../../config/site';
+import { isPublishedPost, sortPostsDesc } from '../../../../utils/routing';
+import {
+  formatTagLabel,
+  getLegacyRedirects,
+  normalizeTagSlug,
+} from '../../../../utils/tags';
+
+export async function getStaticPaths() {
+  const allPublished = sortPostsDesc((await getCollection('blog')).filter(isPublishedPost));
+
+  const tagMap = new Map<string, typeof allPublished>();
+  for (const post of allPublished) {
+    const slugs = new Set(post.data.tags.map(normalizeTagSlug));
+    for (const slug of slugs) {
+      const list = tagMap.get(slug) ?? [];
+      list.push(post);
+      tagMap.set(slug, list);
+    }
+  }
+
+  const canonicalPaths = Array.from(tagMap.entries()).map(([slug, posts]) => ({
+    params: { tag: slug },
+    props: {
+      isRedirect: false as const,
+      slug,
+      posts,
+      redirectTarget: '',
+    },
+  }));
+
+  const isCaseInsensitiveFs = process.platform === 'win32';
+  const emitted = new Set(
+    canonicalPaths.map((p) =>
+      isCaseInsensitiveFs ? p.params.tag.toLowerCase() : p.params.tag,
+    ),
+  );
+
+  const redirectPaths = getLegacyRedirects()
+    .filter(({ legacyRaw, canonicalSlug }) => {
+      if (!tagMap.has(canonicalSlug)) return false;
+      const key = isCaseInsensitiveFs ? legacyRaw.toLowerCase() : legacyRaw;
+      if (emitted.has(key)) return false;
+      emitted.add(key);
+      return true;
+    })
+    .map(({ legacyRaw, canonicalSlug }) => ({
+      params: { tag: legacyRaw },
+      props: {
+        isRedirect: true as const,
+        slug: legacyRaw,
+        posts: [],
+        redirectTarget: `/blog/tag/${canonicalSlug}/`,
+      },
+    }));
+
+  return [...canonicalPaths, ...redirectPaths];
+}
+
+const { isRedirect, slug, posts, redirectTarget } = Astro.props;
+const canonicalUrl = isRedirect
+  ? new URL(redirectTarget, siteConfig.siteUrl).toString()
+  : undefined;
+---
+
+{
+  isRedirect ? (
+    <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="refresh" content={`0; url=${redirectTarget}`} />
+        <meta name="robots" content="noindex, follow" />
+        <link rel="canonical" href={canonicalUrl} />
+        <title>Redirecting to {redirectTarget}</title>
+      </head>
+      <body>
+        <p>
+          Tag normalized. Redirecting to <a href={redirectTarget}>{redirectTarget}</a>...
+        </p>
+      </body>
+    </html>
+  ) : (
+    <BaseLayout
+      title={`Posts tagged “${formatTagLabel(slug)}”`}
+      description={`All published articles tagged with ${formatTagLabel(slug)}.`}
+    >
+      <section class="container archive-shell">
+        <header class="archive-header">
+          <div class="section-kicker">Topic Archive · {posts.length} Articles</div>
+          <h1 class="archive-title">#{slug}</h1>
+          <p class="archive-nav">
+            <a href="/blog.html">← All tags</a> · <a href="/blog/">Writing archive</a>
+          </p>
+        </header>
+
+        <div class="hairline-grid archive-grid">
+          {posts.map((post) => <PostCard post={post} level={2} />)}
+        </div>
+      </section>
+    </BaseLayout>
+  )
+}
+
+<style>
+  .archive-shell {
+    padding-block: clamp(2rem, 4vw, 3.5rem) clamp(3rem, 5vw, 5rem);
+  }
+
+  .archive-header {
+    margin-bottom: 2rem;
+  }
+
+  .archive-title {
+    margin: 0.4rem 0 0.65rem;
+    font-size: var(--text-3xl);
+    letter-spacing: -0.03em;
+  }
+
+  .archive-nav {
+    margin: 0;
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+  }
+
+  .archive-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+</style>

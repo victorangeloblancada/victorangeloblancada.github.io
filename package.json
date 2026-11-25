@@ -1,0 +1,32 @@
+{
+  "name": "victorangeloblancada.github.io",
+  "type": "module",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Personal portfolio, technical publication, and interactive research laboratory of Victor Angelo Blancada.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build && npx pagefind --site dist",
+    "preview": "astro preview",
+    "check": "astro check",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "^7.3.10",
+    "@astrojs/mdx": "^8.1.6",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.6",
+    "astro": "^7.4.13",
+    "d3": "^7.9.2",
+    "katex": "^0.16.47",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@types/d3": "^7.4.3",
+    "pagefind": "^1.6.0",
+    "typescript": "^6.0.3"
+  }
+}

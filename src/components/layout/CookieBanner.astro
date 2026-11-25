@@ -1,0 +1,140 @@
+<aside
+  id="cookie-consent-banner"
+  class="cookie-banner no-print"
+  role="region"
+  aria-label="Cookie consent"
+  hidden
+>
+  <div class="cookie-banner-inner">
+    <div class="cookie-banner-copy">
+      <div class="cookie-banner-kicker mono-meta">Privacy &amp; Analytics</div>
+      <p class="cookie-banner-text">
+        This site can use Google Analytics (GA4) to understand aggregate readership and improve technical articles. Analytics cookies load only if you opt in.
+      </p>
+    </div>
+    <div class="cookie-banner-actions">
+      <button type="button" class="btn" data-cookie-decline>Decline</button>
+      <button type="button" class="btn btn-primary" data-cookie-accept>Accept analytics</button>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .cookie-banner {
+    position: fixed;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 60;
+    max-width: 720px;
+    margin-inline: auto;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    box-shadow: var(--shadow-md);
+    padding: 1rem 1.15rem;
+  }
+
+  .cookie-banner-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  @media (min-width: 680px) {
+    .cookie-banner-inner {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem;
+    }
+  }
+
+  .cookie-banner-kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--accent);
+    margin-bottom: 0.25rem;
+  }
+
+  .cookie-banner-text {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--ink-primary);
+    line-height: 1.5;
+  }
+
+  .cookie-banner-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var CONSENT_KEY = 'analytics_consent';
+
+    function initCookieBanner() {
+      var banner = document.getElementById('cookie-consent-banner');
+      if (!banner) return;
+
+      var stored = null;
+      try {
+        stored = localStorage.getItem(CONSENT_KEY);
+      } catch (_) {}
+
+      if (stored === 'granted' || stored === 'denied') {
+        banner.hidden = true;
+      } else {
+        banner.hidden = false;
+      }
+
+      if (banner.dataset.bound !== '1') {
+        banner.dataset.bound = '1';
+        var acceptBtn = banner.querySelector('[data-cookie-accept]');
+        var declineBtn = banner.querySelector('[data-cookie-decline]');
+
+        if (acceptBtn) {
+          acceptBtn.addEventListener('click', function () {
+            if (typeof window.__grantAnalyticsConsent === 'function') {
+              window.__grantAnalyticsConsent();
+            } else {
+              try {
+                localStorage.setItem(CONSENT_KEY, 'granted');
+              } catch (_) {}
+            }
+            banner.hidden = true;
+          });
+        }
+
+        if (declineBtn) {
+          declineBtn.addEventListener('click', function () {
+            if (typeof window.__denyAnalyticsConsent === 'function') {
+              window.__denyAnalyticsConsent();
+            } else {
+              try {
+                localStorage.setItem(CONSENT_KEY, 'denied');
+              } catch (_) {}
+            }
+            banner.hidden = true;
+          });
+        }
+      }
+
+      document.querySelectorAll('[data-open-cookie-banner]').forEach(function (trigger) {
+        if (trigger.dataset.bound === '1') return;
+        trigger.dataset.bound = '1';
+        trigger.addEventListener('click', function () {
+          banner.hidden = false;
+          var acceptEl = banner.querySelector('[data-cookie-accept]');
+          if (acceptEl instanceof HTMLElement) acceptEl.focus();
+        });
+      });
+    }
+
+    initCookieBanner();
+    document.addEventListener('astro:page-load', initCookieBanner);
+  })();
+</script>

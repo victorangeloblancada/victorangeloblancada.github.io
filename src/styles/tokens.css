@@ -1,0 +1,285 @@
+/* ==========================================================================
+   Design System Tokens — Editorial (Default) & Laboratory Identities
+   ==========================================================================
+   Quick customization guide:
+   1. Edit `--font-editorial` or `--font-mono` below to change site typography.
+   2. Edit the four palette blocks (`Editorial Light`, `Editorial Dark`,
+      `Laboratory Light`, `Laboratory Dark`) to adjust any surface, ink, link,
+      or accent color. Semantic aliases inherit automatically on `:root` and
+      any nested `[data-identity]` element.
+   ========================================================================== */
+
+:root {
+  /* ------------------------------------------------------------------------
+     1. Typography — Newsreader (Editorial) & JetBrains Mono (Technical)
+     ------------------------------------------------------------------------ */
+  --font-editorial: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Functional role aliases (all resolve to the two core font families) */
+  --font-display: var(--font-editorial);
+  --font-sans: var(--font-editorial);
+  --font-serif: var(--font-editorial);
+  --font-quote: var(--font-editorial);
+
+  /* Fluid Typographic Scale */
+  --text-xs: 0.76rem;
+  --text-sm: 0.92rem;
+  --text-base: 1.06rem;
+  --text-lg: 1.18rem;
+  --text-xl: 1.35rem;
+  --text-2xl: clamp(1.65rem, 1.3rem + 1.25vw, 2.2rem);
+  --text-3xl: clamp(2.1rem, 1.6rem + 1.85vw, 3rem);
+  --text-hero: clamp(2.55rem, 1.85rem + 3.1vw, 4.25rem);
+
+  /* Layout & Spacing Scale */
+  --container-max: 1220px;
+  --prose-max: 68ch;
+  --nav-height: 60px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Motion */
+  --ease-instrument: cubic-bezier(0.2, 0, 0, 1);
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 150ms;
+  --dur-base: 240ms;
+  --dur-slow: 420ms;
+}
+
+/* --------------------------------------------------------------------------
+   2A. Editorial Identity — Warm Swiss / Monocle (Default Site Theme)
+   Light colors preserve hue with WCAG AA >= 4.5:1 verification on #F3F0E7 / #E7E4D9
+   -------------------------------------------------------------------------- */
+:root,
+[data-identity='editorial'] {
+  color-scheme: light;
+
+  --color-background: #f3f0e7;
+  --color-surface: #e7e4d9;
+  --color-surface-raised: #faf8f2;
+  --color-surface-subtle: #dcd8cb;
+  --color-glass: rgba(243, 240, 231, 0.9);
+  --color-widget-surface: #252622;
+
+  --color-heading: #292b27;
+  --color-body: #62635c;
+  --color-muted: #67655d;
+  --color-faint: #75736a;
+
+  --color-link: #4b6b64;
+  --color-link-hover: #365e55;
+
+  --color-accent: #9a513c;
+  --color-accent-bright: #b65f47;
+  --color-accent-soft: rgba(182, 95, 71, 0.11);
+  --color-accent-border: rgba(154, 81, 60, 0.36);
+
+  --color-accent-secondary: #7a622e;
+  --color-accent-secondary-bright: #947638;
+  --color-accent-data: #4b6b64;
+
+  --color-border: #d5d1c5;
+  --color-border-strong: #b4afa0;
+  --color-focus-ring: #4b6b64;
+  --color-selection: rgba(182, 95, 71, 0.18);
+  --color-selection-ink: #292b27;
+
+  --shadow-sm: 0 2px 8px rgba(41, 43, 39, 0.06);
+  --shadow-md: 0 16px 40px rgba(41, 43, 39, 0.12);
+  --backdrop-scrim: rgba(37, 38, 34, 0.56);
+
+  --viz-1: #b65f47;
+  --viz-2: #52766e;
+  --viz-3: #947638;
+  --viz-4: #4d6473;
+  --viz-5: #7d5c65;
+  --viz-6: #5c755e;
+  --viz-7: #a36a4e;
+  --viz-8: #6a6d78;
+}
+
+html[data-theme='dark'],
+html[data-theme='dark'] [data-identity='editorial'] {
+  color-scheme: dark;
+
+  --color-background: #252622;
+  --color-surface: #33352f;
+  --color-surface-raised: #3c3e37;
+  --color-surface-subtle: #44463e;
+  --color-glass: rgba(37, 38, 34, 0.9);
+  --color-widget-surface: #33352f;
+
+  --color-heading: #f0ede4;
+  --color-body: #c3c1b7;
+  --color-muted: #a6a69b;
+  --color-faint: #8e8e83;
+
+  --color-link: #a6b9ad;
+  --color-link-hover: #c2d0c7;
+
+  --color-accent: #d48a6c;
+  --color-accent-bright: #e09a7e;
+  --color-accent-soft: rgba(212, 138, 108, 0.16);
+  --color-accent-border: rgba(212, 138, 108, 0.4);
+
+  --color-accent-secondary: #d2b77b;
+  --color-accent-secondary-bright: #dfc894;
+  --color-accent-data: #a6b9ad;
+
+  --color-border: #4a4b43;
+  --color-border-strong: #62645a;
+  --color-focus-ring: #a6b9ad;
+  --color-selection: rgba(212, 138, 108, 0.28);
+  --color-selection-ink: #f0ede4;
+
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 20px 52px rgba(0, 0, 0, 0.42);
+  --backdrop-scrim: rgba(20, 21, 18, 0.72);
+
+  --viz-1: #d48a6c;
+  --viz-2: #a6b9ad;
+  --viz-3: #d2b77b;
+  --viz-4: #8fb0c2;
+  --viz-5: #c7a0b0;
+  --viz-6: #98b59a;
+  --viz-7: #df9f7c;
+  --viz-8: #aeb4be;
+}
+
+/* --------------------------------------------------------------------------
+   2B. Laboratory Identity — R4 / Japanese Digital Culture
+   Light colors preserve hue with WCAG AA >= 4.5:1 verification on #F1F0E9 / #E3E7E3
+   -------------------------------------------------------------------------- */
+[data-identity='laboratory'] {
+  color-scheme: light;
+
+  --color-background: #f1f0e9;
+  --color-surface: #e3e7e3;
+  --color-surface-raised: #f8f8f4;
+  --color-surface-subtle: #d6dcd8;
+  --color-glass: rgba(241, 240, 233, 0.9);
+  --color-widget-surface: #1b3040;
+
+  --color-heading: #203344;
+  --color-body: #566a78;
+  --color-muted: #596973;
+  --color-faint: #677781;
+
+  --color-link: #286c8c;
+  --color-link-hover: #174e6c;
+
+  --color-accent: #aa4834;
+  --color-accent-bright: #b94f39;
+  --color-accent-soft: rgba(185, 79, 57, 0.11);
+  --color-accent-border: rgba(170, 72, 52, 0.36);
+
+  --color-accent-secondary: #7f6227;
+  --color-accent-secondary-bright: #98762f;
+  --color-accent-data: #286c8c;
+
+  --color-border: #cdd5d3;
+  --color-border-strong: #a3b2b0;
+  --color-focus-ring: #286c8c;
+  --color-selection: rgba(185, 79, 57, 0.18);
+  --color-selection-ink: #203344;
+
+  --shadow-sm: 0 2px 8px rgba(32, 51, 68, 0.06);
+  --shadow-md: 0 16px 40px rgba(32, 51, 68, 0.12);
+  --backdrop-scrim: rgba(16, 29, 43, 0.58);
+
+  --viz-1: #b94f39;
+  --viz-2: #286c8c;
+  --viz-3: #4c796f;
+  --viz-4: #98762f;
+  --viz-5: #6b5b95;
+  --viz-6: #3d7a8a;
+  --viz-7: #a85d44;
+  --viz-8: #537a5a;
+}
+
+html[data-theme='dark'][data-identity='laboratory'],
+html[data-theme='dark'] [data-identity='laboratory'] {
+  color-scheme: dark;
+
+  --color-background: #101d2b;
+  --color-surface: #1b3040;
+  --color-surface-raised: #223a4d;
+  --color-surface-subtle: #284256;
+  --color-glass: rgba(16, 29, 43, 0.9);
+  --color-widget-surface: #1b3040;
+
+  --color-heading: #f2eee5;
+  --color-body: #aabcc5;
+  --color-muted: #8fa7b6;
+  --color-faint: #78909f;
+
+  --color-link: #80b9d0;
+  --color-link-hover: #b0d8e5;
+
+  --color-accent: #e47758;
+  --color-accent-bright: #f08e72;
+  --color-accent-soft: rgba(228, 119, 88, 0.16);
+  --color-accent-border: rgba(228, 119, 88, 0.4);
+
+  --color-accent-secondary: #d8b56f;
+  --color-accent-secondary-bright: #e5c689;
+  --color-accent-data: #80b9d0;
+
+  --color-border: #354958;
+  --color-border-strong: #4c6476;
+  --color-focus-ring: #80b9d0;
+  --color-selection: rgba(228, 119, 88, 0.28);
+  --color-selection-ink: #f2eee5;
+
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 20px 52px rgba(0, 0, 0, 0.44);
+  --backdrop-scrim: rgba(7, 13, 20, 0.74);
+
+  --viz-1: #e47758;
+  --viz-2: #80b9d0;
+  --viz-3: #a9b98c;
+  --viz-4: #d8b56f;
+  --viz-5: #c792b8;
+  --viz-6: #5fb8c4;
+  --viz-7: #d58a6a;
+  --viz-8: #9cc48b;
+}
+
+/* --------------------------------------------------------------------------
+   3. Component Token Mapping (Re-evaluated cleanly on :root & nested scopes)
+   -------------------------------------------------------------------------- */
+:root,
+[data-identity] {
+  --bg-canvas: var(--color-background);
+  --bg-surface: var(--color-surface);
+  --bg-elevated: var(--color-surface-raised);
+  --bg-subtle: var(--color-surface-subtle);
+  --bg-glass: var(--color-glass);
+  --widget-surface: var(--color-widget-surface);
+
+  --ink-heading: var(--color-heading);
+  --ink-primary: var(--color-body);
+  --ink-secondary: var(--color-body);
+  --ink-muted: var(--color-muted);
+  --ink-faint: var(--color-faint);
+
+  --link: var(--color-link);
+  --link-hover: var(--color-link-hover);
+
+  --border-subtle: var(--color-border);
+  --border-strong: var(--color-border-strong);
+
+  --accent: var(--color-accent);
+  --accent-bright: var(--color-accent-bright);
+  --accent-soft: var(--color-accent-soft);
+  --accent-border: var(--color-accent-border);
+  --accent-secondary: var(--color-accent-secondary);
+  --accent-secondary-bright: var(--color-accent-secondary-bright);
+  --accent-data: var(--color-accent-data);
+
+  --focus-ring: var(--color-focus-ring);
+  --selection-bg: var(--color-selection);
+  --selection-ink: var(--color-selection-ink);
+}

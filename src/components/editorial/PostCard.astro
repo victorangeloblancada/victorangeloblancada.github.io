@@ -1,0 +1,109 @@
+---
+import type { BlogEntry } from '../../utils/routing';
+import { formatShortDate, getPostUrl } from '../../utils/routing';
+import { estimateReadingTime } from '../../utils/readingTime';
+import { normalizeTagSlug } from '../../utils/tags';
+
+export interface Props {
+  post: BlogEntry;
+  compact?: boolean;
+  level?: 2 | 3;
+}
+
+const { post, compact = false, level = 3 } = Astro.props;
+const Heading = ("h" + level) as 'h2' | 'h3';
+const url = getPostUrl(post);
+const reading = estimateReadingTime(post.body);
+const topTags = Array.from(new Set(post.data.tags.map(normalizeTagSlug))).slice(0, 3);
+---
+
+<article class="post-card hairline-cell">
+  <div class="post-card-meta mono-meta">
+    <time datetime={post.data.date.toISOString().slice(0, 10)}>
+      {formatShortDate(post.data.date)}
+    </time>
+    <span>·</span>
+    <span>{reading.label}</span>
+    {post.data.featured && <span class="featured-badge">Featured</span>}
+  </div>
+
+  <Heading class="post-card-title">
+    <a href={url}>{post.data.title}</a>
+  </Heading>
+
+  {
+    !compact && post.data.description && (
+      <p class="post-card-desc">{post.data.description}</p>
+    )
+  }
+
+  {
+    topTags.length > 0 && (
+      <ul class="tag-list post-card-tags">
+        {topTags.map((slug) => (
+          <li>
+            <a href={`/blog/tag/${slug}/`} class="tag-chip">
+              {slug}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</article>
+
+<style>
+  .post-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .post-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .featured-badge {
+    margin-left: auto;
+    padding: 0.08rem 0.45rem;
+    border-radius: 3px;
+    border: 1px solid var(--accent-border);
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .post-card-title {
+    margin: 0;
+    font-size: 1.15rem;
+    line-height: 1.32;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .post-card-title a {
+    color: var(--ink-primary);
+    text-decoration: none;
+  }
+
+  .post-card-title a:hover {
+    color: var(--accent);
+  }
+
+  .post-card-desc {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    line-height: 1.55;
+  }
+
+  .post-card-tags {
+    margin-top: auto;
+    padding-top: 0.35rem;
+  }
+</style>

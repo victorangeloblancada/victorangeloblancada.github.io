@@ -1,0 +1,65 @@
+<div class="reading-progress no-print" aria-hidden="true">
+  <div class="reading-progress-bar" id="reading-progress-bar"></div>
+</div>
+
+<style>
+  .reading-progress {
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: transparent;
+    z-index: 39;
+    pointer-events: none;
+  }
+
+  .reading-progress-bar {
+    width: 100%;
+    height: 100%;
+    background: var(--accent);
+    transform-origin: left center;
+    transform: scaleX(0);
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .reading-progress-bar {
+      animation: reading-progress-fill linear both;
+      animation-timeline: scroll(root block);
+    }
+
+    @keyframes reading-progress-fill {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    function setupFallbackProgress() {
+      if (typeof CSS !== 'undefined' && CSS.supports && CSS.supports('animation-timeline: scroll()')) {
+        return;
+      }
+      var bar = document.getElementById('reading-progress-bar');
+      if (!bar) return;
+      function update() {
+        var doc = document.documentElement;
+        var max = doc.scrollHeight - doc.clientHeight;
+        var ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        bar.style.transform = 'scaleX(' + ratio + ')';
+      }
+      if (!window.__readingProgressBound) {
+        window.__readingProgressBound = true;
+        window.addEventListener('scroll', update, { passive: true });
+      }
+      update();
+    }
+    setupFallbackProgress();
+    document.addEventListener('astro:page-load', setupFallbackProgress);
+  })();
+</script>

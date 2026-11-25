@@ -1,0 +1,23 @@
+---
+import { getEntry, render } from 'astro:content';
+import ProfileLayout from '../../layouts/ProfileLayout.astro';
+import { siteConfig } from '../../config/site';
+
+const aboutEntry = await getEntry('pages', 'about');
+if (!aboutEntry) {
+  throw new Error('Missing pages/about entry');
+}
+const { Content } = await render(aboutEntry);
+---
+
+<ProfileLayout
+  title={aboutEntry.data.title}
+  headerHtml={aboutEntry.data.header}
+  description={siteConfig.description}
+  image={aboutEntry.data.image}
+  canonicalUrl={new URL('/pages/about.html', siteConfig.siteUrl).toString()}
+  isProfile={true}
+  pagefindIndex={false}
+>
+  <Content />
+</ProfileLayout>

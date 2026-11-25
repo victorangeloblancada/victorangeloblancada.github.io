@@ -1,0 +1,55 @@
+@media print {
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  .site-header,
+  .reading-progress,
+  .toc-rail,
+  .share-row,
+  .post-nav-grid,
+  .related-section,
+  .back-to-top,
+  .search-modal,
+  .code-copy-btn,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    padding: 0 !important;
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+
+  .container,
+  .prose {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .prose a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.82em;
+    color: #444 !important;
+  }
+
+  pre,
+  blockquote,
+  table,
+  figure,
+  img {
+    break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+}

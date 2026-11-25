@@ -1,0 +1,218 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import { siteConfig } from '../../config/site';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonicalUrl?: string;
+  type?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  noindex?: boolean;
+  tags?: string[];
+}
+
+const {
+  title = siteConfig.title,
+  description = siteConfig.description,
+  image = '/assets/images/space-lights.jpg',
+  canonicalUrl,
+  type = 'website',
+  publishedTime,
+  modifiedTime,
+  noindex = false,
+  tags = [],
+} = Astro.props;
+
+const fullTitle =
+  title === siteConfig.title ? title : `${title} — ${siteConfig.shortTitle}`;
+const resolvedCanonical =
+  canonicalUrl ?? new URL(Astro.url.pathname, siteConfig.siteUrl).toString();
+const resolvedImage = image.startsWith('http')
+  ? image
+  : new URL(image, siteConfig.siteUrl).toString();
+
+const jsonLd =
+  type === 'article'
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: title,
+        description,
+        image: resolvedImage,
+        datePublished: publishedTime,
+        dateModified: modifiedTime ?? publishedTime,
+        author: {
+          '@type': 'Person',
+          name: siteConfig.author.name,
+          url: siteConfig.siteUrl,
+        },
+        mainEntityOfPage: resolvedCanonical,
+        keywords: tags.join(', '),
+      }
+    : {
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: siteConfig.author.name,
+        url: siteConfig.siteUrl,
+        sameAs: [siteConfig.author.githubUrl, siteConfig.author.linkedinUrl],
+        description: siteConfig.description,
+      };
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+<link rel="canonical" href={resolvedCanonical} />
+
+<link rel="alternate" type="application/atom+xml" title={siteConfig.title} href="/feed.xml" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="manifest" href="/site.webmanifest" />
+
+<!-- Google Fonts: Newsreader (Editorial) + JetBrains Mono (Technical / Code) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&display=swap"
+/>
+
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={siteConfig.title} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={resolvedCanonical} />
+<meta property="og:image" content={resolvedImage} />
+{publishedTime && <meta property="article:published_time" content={publishedTime} />}
+{modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content={`@${siteConfig.author.twitter}`} />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={resolvedImage} />
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+<!-- Anti-FOUC Theme Initialization (persisted across View Transitions) -->
+<script is:inline>
+  (function () {
+    function applyTheme() {
+      var saved = null;
+      try {
+        saved = localStorage.getItem('theme');
+      } catch (_) {}
+      var prefersDark =
+        typeof window !== 'undefined' &&
+        window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = saved === 'dark' || saved === 'light' ? saved : prefersDark ? 'dark' : 'light';
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.classList.toggle('dark-theme', theme === 'dark');
+      document.documentElement.classList.toggle('light-theme', theme === 'light');
+      if (document.body) {
+        var bodyIdentity = document.body.getAttribute('data-identity');
+        if (bodyIdentity) {
+          document.documentElement.setAttribute('data-identity', bodyIdentity);
+        }
+      }
+    }
+    applyTheme();
+    document.addEventListener('astro:after-swap', applyTheme);
+
+    function syncDynamicYears() {
+      var yearNow = new Date().getFullYear();
+      document.querySelectorAll('[data-current-year]').forEach(function (el) {
+        el.textContent = String(yearNow);
+      });
+      document.querySelectorAll('[data-years-experience]').forEach(function (el) {
+        var startYear = Number(el.getAttribute('data-years-experience'));
+        if (startYear > 1900 && yearNow >= startYear) {
+          el.textContent = String(yearNow - startYear) + '+';
+        }
+      });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', syncDynamicYears);
+    } else {
+      syncDynamicYears();
+    }
+    document.addEventListener('astro:page-load', syncDynamicYears);
+  })();
+</script>
+
+<ClientRouter />
+
+{
+  siteConfig.analytics.enabled && (
+    <script
+      is:inline
+      id="analytics-consent-init"
+      data-gtm-id={siteConfig.analytics.gtmId}
+      data-ga4-id={siteConfig.analytics.ga4Id}
+    >
+      (function () {
+        var el = document.getElementById('analytics-consent-init');
+        var gtmId = (el && el.getAttribute('data-gtm-id')) || '';
+        var ga4Id = (el && el.getAttribute('data-ga4-id')) || '';
+        var CONSENT_KEY = 'analytics_consent';
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          window.dataLayer.push(arguments);
+        }
+        window.gtag = window.gtag || gtag;
+        gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied' });
+
+        function loadAnalytics() {
+          if (window.__analyticsLoaded || !gtmId || !ga4Id) return;
+          window.__analyticsLoaded = true;
+          gtag('consent', 'update', { analytics_storage: 'granted' });
+          window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+          var gtm = document.createElement('script');
+          gtm.async = true;
+          gtm.src = 'https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent(gtmId);
+          document.head.appendChild(gtm);
+          var ga = document.createElement('script');
+          ga.async = true;
+          ga.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ga4Id);
+          document.head.appendChild(ga);
+          gtag('js', new Date());
+          gtag('config', ga4Id);
+        }
+
+        window.__grantAnalyticsConsent = function () {
+          try {
+            localStorage.setItem(CONSENT_KEY, 'granted');
+          } catch (_) {}
+          loadAnalytics();
+        };
+
+        window.__denyAnalyticsConsent = function () {
+          try {
+            localStorage.setItem(CONSENT_KEY, 'denied');
+          } catch (_) {}
+          gtag('consent', 'update', { analytics_storage: 'denied' });
+          document.cookie.split(';').forEach(function (c) {
+            var name = c.split('=')[0].trim();
+            if (name === '_gid' || name.indexOf('_ga') === 0) {
+              document.cookie = name + '=; Max-Age=0; path=/';
+            }
+          });
+        };
+
+        try {
+          if (localStorage.getItem(CONSENT_KEY) === 'granted') {
+            loadAnalytics();
+          }
+        } catch (_) {}
+      })();
+    </script>
+  )
+}

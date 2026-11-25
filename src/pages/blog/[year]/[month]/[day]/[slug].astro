@@ -1,0 +1,65 @@
+---
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '../../../../../layouts/ArticleLayout.astro';
+import {
+  getPostDateParts,
+  getPostSlug,
+  getRelatedPosts,
+  isPublishedPost,
+  sortPostsDesc,
+} from '../../../../../utils/routing';
+
+export async function getStaticPaths() {
+  const allEntries = await getCollection('blog');
+  const published = sortPostsDesc(allEntries.filter(isPublishedPost));
+  const legacyUnlistedDrafts = allEntries.filter(
+    (e) => !isPublishedPost(e) && e.data.legacyUnlisted === true,
+  );
+
+  // Published posts participate in prev/next/related navigation.
+  const pages = published.map((entry, idx) => ({
+    entry,
+    unlisted: false,
+    newerPost: idx > 0 ? published[idx - 1] : undefined,
+    olderPost: idx < published.length - 1 ? published[idx + 1] : undefined,
+  }));
+
+  // Legacy Jekyll drafts flagged `legacyUnlisted: true` were still served at their
+  // permalink in `_site`. Keep those historical URLs resolving as unlisted, noindex
+  // pages, while excluding brand-new `draft: true` posts from the production build.
+  for (const entry of legacyUnlistedDrafts) {
+    pages.push({ entry, unlisted: true, newerPost: undefined, olderPost: undefined });
+  }
+
+  return pages.map(({ entry, unlisted, newerPost, olderPost }) => {
+    const { year, month, day } = getPostDateParts(entry.data.date);
+    const slug = getPostSlug(entry);
+    const relatedPosts = unlisted ? [] : getRelatedPosts(entry, published, 3);
+
+    return {
+      params: { year, month, day, slug },
+      props: {
+        entry,
+        unlisted,
+        prevPost: olderPost,
+        nextPost: newerPost,
+        relatedPosts,
+      },
+    };
+  });
+}
+
+const { entry, unlisted, prevPost, nextPost, relatedPosts } = Astro.props;
+const { Content, headings } = await render(entry);
+---
+
+<ArticleLayout
+  entry={entry}
+  headings={headings}
+  prevPost={prevPost}
+  nextPost={nextPost}
+  relatedPosts={relatedPosts}
+  unlisted={unlisted}
+>
+  <Content />
+</ArticleLayout>

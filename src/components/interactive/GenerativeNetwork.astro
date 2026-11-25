@@ -1,0 +1,191 @@
+---
+export interface Props {
+  mode?: 'hero' | 'lab';
+}
+
+const { mode = 'hero' } = Astro.props;
+const defaultNodes = mode === 'hero' ? 36 : 48;
+const defaultRadius = mode === 'hero' ? 125 : 140;
+const defaultSpeed = mode === 'hero' ? 0.65 : 0.9;
+---
+
+<div
+  class:list={['network-widget', `mode-${mode}`]}
+  data-identity="laboratory"
+  data-network-root
+  data-default-nodes={defaultNodes}
+  data-default-radius={defaultRadius}
+  data-default-speed={defaultSpeed}
+>
+  {
+    mode === 'lab' && (
+      <div class="net-controls hairline-grid">
+        <div class="hairline-cell net-ctrl">
+          <label for="net-nodes-slider" class="mono-meta">
+            Nodes (<span data-net-nodes-val>{defaultNodes}</span>)
+          </label>
+          <input
+            id="net-nodes-slider"
+            type="range"
+            min="15"
+            max="85"
+            step="1"
+            value={defaultNodes}
+            data-net-nodes
+          />
+        </div>
+
+        <div class="hairline-cell net-ctrl">
+          <label for="net-radius-slider" class="mono-meta">
+            Link Radius (<span data-net-radius-val>{defaultRadius}px</span>)
+          </label>
+          <input
+            id="net-radius-slider"
+            type="range"
+            min="60"
+            max="220"
+            step="5"
+            value={defaultRadius}
+            data-net-radius
+          />
+        </div>
+
+        <div class="hairline-cell net-ctrl">
+          <label for="net-speed-slider" class="mono-meta">
+            Drift (<span data-net-speed-val>{defaultSpeed.toFixed(1)}x</span>)
+          </label>
+          <input
+            id="net-speed-slider"
+            type="range"
+            min="0.1"
+            max="2.0"
+            step="0.1"
+            value={defaultSpeed}
+            data-net-speed
+          />
+        </div>
+
+        <div class="hairline-cell net-ctrl-actions">
+          <button type="button" class="btn btn-primary" data-net-pause>Pause</button>
+          <button type="button" class="btn" data-net-reset>Reseed</button>
+          <span class="mono-meta">Edges: <strong data-net-edges-val>0</strong></span>
+        </div>
+      </div>
+    )
+  }
+
+  <div class="net-canvas-box">
+    <canvas
+      class="net-canvas"
+      data-network-canvas
+      aria-label="Interactive node-link proximity graph visualization"
+    ></canvas>
+    <noscript>
+      <svg viewBox="0 0 420 260" class="net-fallback-svg" role="img" aria-label="Static network topology diagram">
+        <g stroke="currentColor" stroke-opacity="0.24" stroke-width="1">
+          <line x1="60" y1="60" x2="150" y2="95" />
+          <line x1="150" y1="95" x2="245" y2="55" />
+          <line x1="150" y1="95" x2="215" y2="175" />
+          <line x1="245" y1="55" x2="340" y2="115" />
+          <line x1="215" y1="175" x2="340" y2="115" />
+          <line x1="85" y1="190" x2="215" y2="175" />
+        </g>
+        <g fill="currentColor" fill-opacity="0.65">
+          <circle cx="60" cy="60" r="3" />
+          <circle cx="150" cy="95" r="4.5" fill="#d97706" />
+          <circle cx="245" cy="55" r="3" />
+          <circle cx="215" cy="175" r="4" fill="#d97706" />
+          <circle cx="340" cy="115" r="3" />
+          <circle cx="85" cy="190" r="3" />
+        </g>
+      </svg>
+    </noscript>
+  </div>
+</div>
+
+<style>
+  .network-widget {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .net-controls {
+    grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .net-ctrl {
+    display: grid;
+    gap: 0.4rem;
+    padding: 0.8rem 1rem;
+  }
+
+  .net-ctrl input[type='range'] {
+    width: 100%;
+    accent-color: var(--accent);
+    min-height: 36px;
+  }
+
+  .net-ctrl-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1rem;
+  }
+
+  .net-canvas-box {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    overflow: hidden;
+  }
+
+  .mode-hero .net-canvas-box {
+    min-height: 280px;
+    height: 100%;
+  }
+
+  .mode-lab .net-canvas-box {
+    min-height: 400px;
+  }
+
+  .net-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .net-fallback-svg {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<script>
+  let netCleanups: Array<() => void> = [];
+
+  async function initNetworks() {
+    netCleanups.forEach((fn) => fn());
+    netCleanups = [];
+    const roots = document.querySelectorAll<HTMLElement>('[data-network-root]');
+    if (!roots.length) return;
+    const { mountGenerativeNetwork } = await import('../../scripts/generative-network');
+    roots.forEach((el) => {
+      netCleanups.push(
+        mountGenerativeNetwork(el, {
+          nodeCount: Number(el.dataset.defaultNodes || 36),
+          linkRadius: Number(el.dataset.defaultRadius || 125),
+          speed: Number(el.dataset.defaultSpeed || 0.65),
+        }),
+      );
+    });
+  }
+
+  initNetworks();
+  document.addEventListener('astro:page-load', initNetworks);
+</script>

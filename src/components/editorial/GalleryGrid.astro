@@ -1,0 +1,79 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+
+export interface Props {
+  folder: string;
+}
+
+const { folder } = Astro.props;
+const galleryDir = path.resolve(process.cwd(), 'public/assets/images', folder);
+const imageFiles = fs.existsSync(galleryDir)
+  ? fs
+      .readdirSync(galleryDir)
+      .filter((name) => /\.(png|jpe?g|webp|gif)$/i.test(name))
+      .sort()
+  : [];
+---
+
+{
+  imageFiles.length > 0 && (
+    <section class="gallery-section" aria-label="AI Paintings Gallery">
+      <div class="gallery-grid">
+        {imageFiles.map((fileName) => {
+          const src = `/assets/images/${folder}/${encodeURIComponent(fileName).replace(/%2F/g, '/')}`;
+          const label = fileName.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ');
+          return (
+            <figure class="gallery-item">
+              <img
+                src={src}
+                alt={`AI neural style transfer artwork: ${label}`}
+                loading="lazy"
+                decoding="async"
+                data-lightbox-img
+              />
+              <figcaption class="mono-meta">{label}</figcaption>
+            </figure>
+          );
+        })}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .gallery-section {
+    margin-top: 2rem;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .gallery-item {
+    margin: 0;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    overflow: hidden;
+  }
+
+  .gallery-item img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border: none;
+    border-radius: 0;
+    cursor: zoom-in;
+  }
+
+  .gallery-item figcaption {
+    padding: 0.5rem 0.7rem;
+    border-top: 1px solid var(--border-subtle);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>

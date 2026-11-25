@@ -1,0 +1,120 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import '../styles/prose.css';
+
+export interface Props {
+  title: string;
+  headerHtml?: string;
+  description?: string;
+  image?: string;
+  canonicalUrl?: string;
+  isProfile?: boolean;
+  pagefindIndex?: boolean;
+}
+
+const {
+  title,
+  headerHtml,
+  description,
+  image,
+  canonicalUrl,
+  isProfile = false,
+  pagefindIndex = true,
+} = Astro.props;
+const cleanHeadline = headerHtml ? headerHtml.replace(/<br\s*\/?>/gi, ' ') : title;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  canonicalUrl={canonicalUrl}
+  pagefindIndex={pagefindIndex}
+>
+  <article class="container profile-shell">
+    <span class="sr-only" data-pagefind-filter="type">page</span>
+    <span class="sr-only" data-pagefind-filter="category">profile</span>
+
+    <header class:list={['profile-header', { 'has-portrait': Boolean(image) }]}>
+      <div>
+        <div class="mono-meta">Profile</div>
+        <h1 class="profile-title" data-pagefind-meta="title" set:html={headerHtml ?? cleanHeadline} />
+        <div class="profile-quick-links">
+          <a href="/pages/resume-downloads.html" class="btn btn-primary">Résumé &amp; CV</a>
+          <a href="/projects/" class="btn">Selected Work</a>
+          <a href="/contact/" class="btn">Contact</a>
+        </div>
+      </div>
+
+      {
+        image && (
+          <figure class:list={['profile-figure', { 'is-portrait': isProfile }]}>
+            <img src={image} alt={cleanHeadline} loading="eager" decoding="async" />
+          </figure>
+        )
+      }
+    </header>
+
+    <div class="prose profile-prose">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .profile-shell {
+    padding-block: clamp(2rem, 4vw, 3.5rem) clamp(3rem, 5vw, 5rem);
+  }
+
+  .profile-header {
+    display: grid;
+    gap: 2rem;
+    padding-bottom: 2rem;
+    margin-bottom: 2.25rem;
+    border-bottom: 1px solid var(--border-subtle);
+    align-items: center;
+  }
+
+  @media (min-width: 768px) {
+    .profile-header.has-portrait {
+      grid-template-columns: 1.35fr 0.85fr;
+    }
+  }
+
+  .profile-title {
+    margin: 0.45rem 0 1.25rem;
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+  }
+
+  .profile-title :global(.emphasized) {
+    color: var(--accent);
+  }
+
+  .profile-quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .profile-figure {
+    margin: 0;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--bg-surface);
+  }
+
+  .profile-figure img {
+    width: 100%;
+    max-height: 360px;
+    object-fit: cover;
+  }
+
+  .profile-figure.is-portrait img {
+    object-position: center top;
+  }
+</style>

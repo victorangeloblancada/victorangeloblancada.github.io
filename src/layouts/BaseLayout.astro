@@ -1,0 +1,68 @@
+---
+import BaseHead from '../components/layout/BaseHead.astro';
+import HeaderNav from '../components/layout/HeaderNav.astro';
+import Footer from '../components/layout/Footer.astro';
+import SearchModal from '../components/layout/SearchModal.astro';
+import CookieBanner from '../components/layout/CookieBanner.astro';
+import { siteConfig } from '../config/site';
+import '../styles/tokens.css';
+import '../styles/global.css';
+import '../styles/print.css';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonicalUrl?: string;
+  type?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  noindex?: boolean;
+  tags?: string[];
+  pagefindIndex?: boolean;
+  identity?: 'editorial' | 'laboratory';
+}
+
+const {
+  title,
+  description,
+  image,
+  canonicalUrl,
+  type,
+  publishedTime,
+  modifiedTime,
+  noindex = false,
+  tags,
+  pagefindIndex = false,
+  identity = 'editorial',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-identity={identity}>
+  <head>
+    <BaseHead
+      title={title}
+      description={description}
+      image={image}
+      canonicalUrl={canonicalUrl}
+      type={type}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      noindex={noindex}
+      tags={tags}
+    />
+  </head>
+  <body data-identity={identity}>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <HeaderNav />
+
+    <main id="main-content" tabindex="-1" data-pagefind-body={pagefindIndex ? '' : undefined}>
+      <slot />
+    </main>
+
+    <Footer />
+    <SearchModal />
+    {siteConfig.analytics.enabled && <CookieBanner />}
+  </body>
+</html>
