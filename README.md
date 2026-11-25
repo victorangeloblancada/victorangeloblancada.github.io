@@ -72,8 +72,8 @@ Google Tag Manager (`GTM-5S5WB7M`) and Google Analytics 4 (`G-ERJECQ081H`) are *
 - **Local / `.env` (optional, never commit `.env`):**
   ```bash
   PUBLIC_ENABLE_ANALYTICS=true
-  PUBLIC_GTM_ID=GTM-5S5WB7M
-  PUBLIC_GA4_ID=G-ERJECQ081H
+  PUBLIC_GTM_ID=
+  PUBLIC_GA4_ID=
   ```
 - **GitHub Actions Production Deployment:**
   1. Open your GitHub repository → **Settings → Secrets and variables → Actions → Variables**.
